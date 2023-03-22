@@ -1,6 +1,8 @@
-// import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { 
+  SafeAreaView,
+  StyleSheet
+} from 'react-native';
 import { WebView } from 'react-native-webview';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
 
@@ -16,7 +18,7 @@ class App extends Component {
   openOAuthLink = async link => {
     try {
       if (await InAppBrowser.isAvailable()) {
-        InAppBrowser.openAuth(link, '', { modalPresentationStyle: "fullscreen"})
+        const result = InAppBrowser.openAuth(link, '', { modalPresentationStyle: "fullscreen"})
           .then(response => {
             this.handleOAuthResult(response);
           })
@@ -25,7 +27,7 @@ class App extends Component {
         console.log(JSON.stringify(result));
         return result;
       } else {
-        // consider opening in browser
+        // consider opening in browser as fallback
         throw "InAppBrowser is not available";
       }
     } catch (err) {
@@ -39,34 +41,46 @@ class App extends Component {
     }
   };
 
-  handleLightboxWindowEvent = async (navState, callBack) => {
-    // check for url in navigation event
-    if (navState.url) {
-      const baseUrls = ["paywithmybank.com", "trustly.one"];
-      const oauthLoginPath = "/oauth/login";
-      if (navState.url.includes(oauthLoginPath) && (navState.url.includes(baseUrls[0]) || navState.url.includes(baseUrls[1]))) {
-        // user selected an OAuth bank
-        await this.openOAuthLink(navState.url);
+  handleOAuthMessage = message => {
+    const data = message.nativeEvent ? message.nativeEvent.data : null;
+    if ( data && typeof data == 'string') {
+      const [command, ...params] = data.split("|");
+      if(command.includes("ExternalBrowserIntegration")) {
+        const messageUrl = params[1];
+        const approvedBaseUrls = ["paywithmybank.com", "trustly.one"];
+        const oauthLoginPath = "/oauth/login";
+        if (messageUrl.includes(oauthLoginPath) && (messageUrl.includes(approvedBaseUrls[0]) || messageUrl.includes(approvedBaseUrls[1]))) {
+          // user selected an OAuth bank
+          // console.log(messageUrl);
+          this.openOAuthLink(messageUrl);
+        }   
       }
-    } else {
-      return null;
     }
   }
 
-  // handleLightboxMessage = async (event) => {
-  //   console.log(event);
-  // }
-
   render(){
+    
+    const postMessageForOauth = 
+    `window.addEventListener(
+        "message",
+        function (event) {
+          var data = (event || {}).data || {}
+          window.ReactNativeWebView.postMessage(event.data);
+        },
+        false
+      );`;
+
     return (
-      <WebView
-        source={{ uri: 'http://localhost:3000?integrationContext=InAppBrowser&urlScheme=trustly-react-native' }}
-        ref={(ref) => (this.webview = ref)}
-        onNavigationStateChange={this.handleLightboxWindowEvent}
-        // onMessage={this.handleLightboxMessage}
-        javaScriptEnabled={true}
-        javaScriptCanOpenWindowsAutomatically={true}
-        startInLoadingState />
+      <SafeAreaView style={{flex: 1, height: '100%'}}>
+        <WebView
+          ref={(ref) => (this.trustlyWebview = ref)}
+          source={{ uri: 'http://localhost:3000?integrationContext=InAppBrowserNotify&urlScheme=trustly-react-native' }}
+          injectedJavaScript={postMessageForOauth}
+          onMessage={this.handleOAuthMessage}
+          javaScriptEnabled={true}
+          startInLoadingState 
+        />
+        </SafeAreaView>
       );
   }
 }
