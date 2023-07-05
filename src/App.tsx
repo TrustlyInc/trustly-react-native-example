@@ -16,7 +16,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 export default class App extends Component {
   trustlyWebView = null;
 
-  widgetData = {
+  establishData = {
     accessId: "<YOUR_ACCESS_ID>",
     merchantId: "<YOUR_MERCHANT_ID>",
     currency: "USD",
@@ -95,7 +95,7 @@ export default class App extends Component {
         }).then((response) => {
           this.handleOAuthResult(response);
         });
-        
+
       }
       else Linking.openURL(url)
     } catch (error) {
@@ -112,10 +112,10 @@ export default class App extends Component {
 
     if(command.includes("ExternalBrowserIntegration")) {
       var messageUrl = params[1]
-      
+
       if( shouldOpenInAppBrowser(messageUrl) ) {
         this.openLink(messageUrl);
-      }      
+      }
     }
 
   }
@@ -151,7 +151,7 @@ export default class App extends Component {
         <SafeAreaView style={backgroundStyle}>
           <WebView
               ref={(ref) => (this.trustlyWebView = ref)}
-              source={{ html: widget(this.widgetData) }}
+              source={{ html: widget(this.establishData) }}
               renderLoading={this.LoadingIndicatorView}
               injectedJavaScript={postMessageForOauth}
               onMessage={this.handleOauthMessage}
