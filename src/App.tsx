@@ -159,7 +159,6 @@ export default class App extends Component {
               startInLoadingState
               style={styles.widget}
             />
-
         </SafeAreaView>
     );
   }
