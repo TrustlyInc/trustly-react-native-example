@@ -6,3 +6,6 @@ android/.idea
 *.iml
 local.properties
 .DS_Store
+ios/Pods/*
+ios/build/*
+vendor/*
