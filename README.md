@@ -12,6 +12,7 @@ Install dependencies
 
 ```shell
 cd trustly-react-native-example && npm install
+cd ios && pod install
 ```
 
 Replace the placeholder texts with your credentials:
