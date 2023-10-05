@@ -17,11 +17,11 @@ export default class App extends Component {
   trustlyWebView = null;
 
   establishData = {
-    accessId: "<YOUR_ACCESS_ID>",
-    merchantId: "<YOUR_MERCHANT_ID>",
+    accessId: "A48B73F694C4C8EE6306",
+    merchantId: "110005514",
     currency: "USD",
     amount: "2.00",
-    merchantReference: "<unique reference code from your app>",
+    merchantReference: "cac73df7-52b4-47d7-89d3-9628d4cfb65e",
     paymentType: "Retrieval",
     returnUrl: "/returnUrl",
     cancelUrl: "/cancelUrl",
