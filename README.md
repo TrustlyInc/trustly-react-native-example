@@ -76,3 +76,32 @@ handleOauthMessage = (message: any) => {
   }
 }
 ```
+
+## Closing Chrome Custom Tab in Android
+
+### RedirectActivity
+
+When the application receive some action for example `in-app-browser-rn`, or the name that you defined in `urlScheme`, it will call your target Activity with some flags, and reload it.
+The example below is from `RedirectActivity`
+
+```java
+    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    startActivity(intent);
+    finish();
+```
+
+### AndroidManifest
+
+```xml
+    <activity
+    android:name=".RedirectActivity"
+    android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="in-app-browser-rn" />
+        </intent-filter>
+    </activity>
+```
