@@ -1,0 +1,7 @@
+
+5typescript:S6647-"Useless constructor.(øæÂÓÿÿÿÿÿ
+ztypescript:S64417"^Remove this property or method or refactor "App", as "sleep" is not used inside component body(˜œäŸ
+Utypescript:S1854?"4Remove this useless assignment to variable "result".(¶Ï‰úÿÿÿÿ
+Dtypescript:S3504o")Unexpected var, use let or const instead.(ºâÑu
+Dtypescript:S3504r")Unexpected var, use let or const instead.(‰ù‹
+[typescript:S1854‚"9Remove this useless assignment to variable "bounceValue".(¬Ó€ıÿÿÿÿ
