@@ -5,6 +5,8 @@ import {
   Animated,
   Linking,
   SafeAreaView,
+  TextInput,
+  Text,
 } from "react-native";
 import { WebView } from "react-native-webview";
 import { widget } from "./trustly";
@@ -12,19 +14,21 @@ import { shouldOpenInAppBrowser } from "./oauth-utils";
 
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { MaskedTextInput} from "react-native-mask-text";
 
 export default class App extends Component {
   trustlyWebView = null;
 
   establishData = {
-    accessId: "<YOUR_ACCESS_ID>",
-    merchantId: "<YOUR_MERCHANT_ID>",
+    accessId: "A48B73F694C4C8EE6306",
+    merchantId: "110005514",
     currency: "USD",
-    amount: "2.00",
-    merchantReference: "<unique reference code from your app>",
+    amount: "0.00",
+    merchantReference: "cac73df7-52b4-47d7-89d3-9628d4cfb65e",
     paymentType: "Retrieval",
     returnUrl: "/returnUrl",
     cancelUrl: "/cancelUrl",
+    description: "First Data Mobile Test",
     customer: {
       name: "John",
       address: {
@@ -39,7 +43,7 @@ export default class App extends Component {
   };
 
   state = {
-    bounceValue: new Animated.Value(1000),
+    amount: '',
   };
 
   constructor(props) {
@@ -126,9 +130,13 @@ export default class App extends Component {
     }
   }
 
-  render() {
-    const { bounceValue } = this.state;
+  onChangeAmount = (amount: string) => {
+    this.setState({amount});
+    this.establishData.amount = amount;
+    this.establishData.description = `Testing: ${amount}`;
+  }
 
+  render() {
     const backgroundStyle = {
       backgroundColor: Colors.lighter,
       flex: 1,
@@ -146,9 +154,38 @@ export default class App extends Component {
         );
     `;
 
+    const mask = '0.00';
+
     return (
 
         <SafeAreaView style={backgroundStyle}>
+
+        <Text style={styles.amountText}>
+          {`Amount:`}
+        </Text>
+
+        <MaskedTextInput
+          type="currency"
+          options={{
+            prefix: '',
+            decimalSeparator: '.',
+            groupSeparator: ',',
+            precision: 2
+          }}
+          onChangeText={(amount, rawAmount) => {
+            this.onChangeAmount(amount);
+          }}
+          style={styles.input}
+          keyboardType="numeric"
+        />
+        {/* <TextInput
+              style={styles.input}
+              keyboardType='number-pad'
+              
+              onChangeText={(amount) => this.onChangeAmount(amount)}
+              value={`${this.state.amount}`}
+            /> */}
+          
           <WebView
               ref={(ref) => (this.trustlyWebView = ref)}
               source={{ html: widget(this.establishData) }}
@@ -208,6 +245,19 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
     justifyContent: "center",
+  },
+
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+
+  amountText: {
+    padding: 10,
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 
 });

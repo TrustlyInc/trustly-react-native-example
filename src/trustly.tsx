@@ -4,7 +4,7 @@ export const widget = (data = {}) => `<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trustly</title>
-  <script src="https://sandbox.trustly.one/start/scripts/pwmb.js?accessId=<YOUR_ACCESS_ID>" type="text/javascript"></script>
+  <script src="https://sandbox.trustly.one/start/scripts/pwmb.js?accessId=A48B73F694C4C8EE6306" type="text/javascript"></script>
 </head>
 <body>
   <div id="widget"></div>
