@@ -178,24 +178,20 @@ export default class App extends Component {
           style={styles.input}
           keyboardType="numeric"
         />
-        {/* <TextInput
-              style={styles.input}
-              keyboardType='number-pad'
-              
-              onChangeText={(amount) => this.onChangeAmount(amount)}
-              value={`${this.state.amount}`}
-            /> */}
           
-          <WebView
-              ref={(ref) => (this.trustlyWebView = ref)}
-              source={{ html: widget(this.establishData) }}
-              renderLoading={this.LoadingIndicatorView}
-              injectedJavaScript={postMessageForOauth}
-              onMessage={this.handleOauthMessage}
-              javaScriptEnabled={true}
-              startInLoadingState
-              style={styles.widget}
-            />
+        <WebView
+            ref={(ref) => (this.trustlyWebView = ref)}
+            source={{ html: widget(this.establishData) }}
+            renderLoading={this.LoadingIndicatorView}
+            injectedJavaScript={postMessageForOauth}
+            onMessage={this.handleOauthMessage}
+            javaScriptEnabled={true}
+            startInLoadingState
+            style={styles.widget}
+            onNavigationStateChange={navState => {
+              console.log("navState ", navState);
+          }}
+          />
         </SafeAreaView>
     );
   }
@@ -244,7 +240,10 @@ const styles = StyleSheet.create({
 
   loading: {
     flex: 1,
+    position: "absolute",
     justifyContent: "center",
+    height: '100%' , 
+    width: '100%'
   },
 
   input: {
