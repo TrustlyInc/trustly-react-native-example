@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Text,
-  View,
 } from "react-native";
 import { WebView } from "react-native-webview";
 import { widget, lightbox } from "./trustly";
@@ -108,7 +107,7 @@ export default class App extends Component {
 
   handleOauthMessage = (message: any) => {
     const data = message.nativeEvent.data
-    console.log(data);
+    
     if ( typeof data !== 'string') return;
 
     this.handlePaymentProviderId(data);
@@ -166,12 +165,9 @@ export default class App extends Component {
 
   onPressPayButton = () => {
     this.establishData.amount = this.state.amount;
-    this.establishData.description = `Testing: ${this.state.amount}`;
     this.establishData.paymentProviderId = this.state.paymentProviderId;
     
     this.setState({step: 'lightbox'});
-    
-    console.log(this.state.paymentProviderId);
   }
 
   onPressBackToWidget = () => {
@@ -184,15 +180,14 @@ export default class App extends Component {
   }
 
   postMessageForOauth = `
-  window.addEventListener(
-    "message",
-    function (event) {
-      var data = (event || {}).data || {}
-      window.ReactNativeWebView.postMessage(event.data);
-    },
-    false
-  );
-  `;
+    window.addEventListener(
+      "message",
+      function (event) {
+        var data = (event || {}).data || {}
+        window.ReactNativeWebView.postMessage(event.data);
+      },
+      false
+    );`;
 
   buildWidgetScreen = () => {
 
@@ -228,9 +223,6 @@ export default class App extends Component {
           javaScriptEnabled={true}
           startInLoadingState
           style={styles.widget}
-          onNavigationStateChange={navState => {
-            console.log("navState ", navState);
-        }}
       />
 
       <TouchableOpacity
@@ -256,9 +248,6 @@ export default class App extends Component {
           javaScriptEnabled={true}
           startInLoadingState
           style={styles.widget}
-          onNavigationStateChange={navState => {
-            console.log("navState ", navState);
-        }}
       />
 
     </SafeAreaView>

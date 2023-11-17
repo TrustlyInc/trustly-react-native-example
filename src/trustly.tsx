@@ -17,7 +17,6 @@ export const widget = (data = {}) => `<!DOCTYPE html>
     };
 
     const TrustlyWidgetBankSelected = (data) => {
-      bankSelected = data.paymentProviderId
       return false;
     }
 
@@ -44,11 +43,6 @@ export const lightbox = (data = {}) => `<!DOCTYPE html>
       dragAndDrop: true,
       widgetContainerId: "widget",
     };
-
-    const TrustlyWidgetBankSelected = (data) => {
-      bankSelected = data.paymentProviderId
-      return false;
-    }
 
     Trustly.establish(establishData, TrustlyOptions);
 
