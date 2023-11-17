@@ -1,13 +1,3 @@
-import {
-    Text,
-    StyleSheet,
-    View,
-    ActivityIndicator,
-    Animated,
-    Linking,
-    Alert,
-    SafeAreaView,
-  } from "react-native";
 
 const baseUrls = ["paywithmybank.com", "trustly.one", "192.168.0.9"];
 const oauthLoginPaths = ["/oauth/login"];

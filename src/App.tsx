@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import {
   StyleSheet,
   ActivityIndicator,
-  Animated,
   Linking,
   SafeAreaView,
-  TextInput,
+  TouchableOpacity,
   Text,
+  View,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import { widget } from "./trustly";
+import { widget, lightbox } from "./trustly";
 import { shouldOpenInAppBrowser } from "./oauth-utils";
 
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
@@ -44,6 +44,9 @@ export default class App extends Component {
 
   state = {
     amount: '',
+    paymentProviderId: '',
+    step: 'widget',
+    returnParameters: '',
   };
 
   constructor(props) {
@@ -54,10 +57,6 @@ export default class App extends Component {
     return (
       <ActivityIndicator color="#333" size="small" style={styles.loading} />
     );
-  }
-
-  async sleep(timeout: number) {
-    return new Promise(resolve => setTimeout(resolve, timeout))
   }
 
   async openLink(url: string) {
@@ -109,8 +108,12 @@ export default class App extends Component {
 
   handleOauthMessage = (message: any) => {
     const data = message.nativeEvent.data
-
+    console.log(data);
     if ( typeof data !== 'string') return;
+
+    this.handlePaymentProviderId(data);
+    this.handleWithCancelOrClose(data);
+    this.handleClosePanelSuccess(data);
 
     var [command, ...params] = data.split("|");
 
@@ -124,6 +127,33 @@ export default class App extends Component {
 
   }
 
+  handlePaymentProviderId(data: string) {
+    if(data.startsWith('PayWithMyBank.createTransaction')) {
+      let splitedData = data.split('|')
+
+      this.setState({paymentProviderId: splitedData[1]});
+    }
+  }
+
+  handleWithCancelOrClose(data: string) {
+    if(data.endsWith('close|cancel|')) {
+      this.setState({step: 'widget'});
+    }
+  }
+
+  handleClosePanelSuccess(data: string) {
+    if(data.startsWith('PayWithMyBank.closePanel|')) {
+      let returnValues = data.split('|')[1];
+      let returnParameters = returnValues.split('?')[1];
+
+      this.setState({
+        returnParameters: returnParameters,
+        step: 'success'
+      });
+
+    }
+  }
+
   handleOAuthResult = (result: any) =>{
     if (result.type === 'success') {
       this.trustlyWebView.injectJavaScript('window.Trustly.proceedToChooseAccount();');
@@ -132,72 +162,147 @@ export default class App extends Component {
 
   onChangeAmount = (amount: string) => {
     this.setState({amount});
-    this.establishData.amount = amount;
-    this.establishData.description = `Testing: ${amount}`;
   }
 
-  render() {
-    const backgroundStyle = {
-      backgroundColor: Colors.lighter,
-      flex: 1,
-      height: '100%',
-    };
+  onPressPayButton = () => {
+    this.establishData.amount = this.state.amount;
+    this.establishData.description = `Testing: ${this.state.amount}`;
+    this.establishData.paymentProviderId = this.state.paymentProviderId;
+    
+    this.setState({step: 'lightbox'});
+    
+    console.log(this.state.paymentProviderId);
+  }
 
-    const postMessageForOauth = `
-        window.addEventListener(
-          "message",
-          function (event) {
-            var data = (event || {}).data || {}
-            window.ReactNativeWebView.postMessage(event.data);
-          },
-          false
-        );
-    `;
+  onPressBackToWidget = () => {
+    this.setState({
+      step: 'widget',
+      amount: '',
+      paymentProviderId: '',
+      returnParameters: '',
+    });
+  }
+
+  postMessageForOauth = `
+  window.addEventListener(
+    "message",
+    function (event) {
+      var data = (event || {}).data || {}
+      window.ReactNativeWebView.postMessage(event.data);
+    },
+    false
+  );
+  `;
+
+  buildWidgetScreen = () => {
 
     const mask = '0.00';
 
+    return <SafeAreaView style={styles.backgroundStyle}>
+
+      <Text style={styles.amountText}>
+        {`Amount:`}
+      </Text>
+
+      <MaskedTextInput
+        type="currency"
+        options={{
+          prefix: '',
+          decimalSeparator: '.',
+          groupSeparator: ',',
+          precision: 2
+        }}
+        onChangeText={(amount, rawAmount) => {
+          this.onChangeAmount(amount);
+        }}
+        style={styles.input}
+        keyboardType="numeric"
+      />
+        
+      <WebView
+          ref={(ref) => (this.trustlyWebView = ref)}
+          source={{ html: widget(this.establishData) }}
+          renderLoading={this.LoadingIndicatorView}
+          injectedJavaScript={this.postMessageForOauth}
+          onMessage={this.handleOauthMessage}
+          javaScriptEnabled={true}
+          startInLoadingState
+          style={styles.widget}
+          onNavigationStateChange={navState => {
+            console.log("navState ", navState);
+        }}
+      />
+
+      <TouchableOpacity
+        style={styles.payButton}
+        onPress={this.onPressPayButton} 
+        >
+        <Text style={{ color: '#fff' }}>Pay button</Text>
+      </TouchableOpacity>
+
+    </SafeAreaView>
+  }
+
+  buildLightBoxScreen = () => {
+
+    return <SafeAreaView style={styles.backgroundStyle}>
+        
+      <WebView
+          ref={(ref) => (this.trustlyWebView = ref)}
+          source={{ html: lightbox(this.establishData) }}
+          renderLoading={this.LoadingIndicatorView}
+          injectedJavaScript={this.postMessageForOauth}
+          onMessage={this.handleOauthMessage}
+          javaScriptEnabled={true}
+          startInLoadingState
+          style={styles.widget}
+          onNavigationStateChange={navState => {
+            console.log("navState ", navState);
+        }}
+      />
+
+    </SafeAreaView>
+  }
+
+  buildResultScreen = () => {
+
+    return <SafeAreaView style={styles.backgroundStyle}>
+
+      <Text style={styles.amountText}>
+        {`SUCCESS PAGE`}
+      </Text>
+        
+      <Text style={styles.amountText}>
+        {this.state.returnParameters}
+      </Text>
+
+      <TouchableOpacity
+        style={styles.payButton}
+        onPress={this.onPressBackToWidget} 
+        >
+        <Text style={{ color: '#fff' }}>Back to widget</Text>
+      </TouchableOpacity>
+
+    </SafeAreaView>
+  }
+
+  render() {
     return (
 
-        <SafeAreaView style={backgroundStyle}>
+      (this.state.step === 'widget') ? this.buildWidgetScreen() : 
+      (this.state.step === 'lightbox') ? this.buildLightBoxScreen() : this.buildResultScreen()
 
-        <Text style={styles.amountText}>
-          {`Amount:`}
-        </Text>
-
-        <MaskedTextInput
-          type="currency"
-          options={{
-            prefix: '',
-            decimalSeparator: '.',
-            groupSeparator: ',',
-            precision: 2
-          }}
-          onChangeText={(amount, rawAmount) => {
-            this.onChangeAmount(amount);
-          }}
-          style={styles.input}
-          keyboardType="numeric"
-        />
-          
-        <WebView
-            ref={(ref) => (this.trustlyWebView = ref)}
-            source={{ html: widget(this.establishData) }}
-            renderLoading={this.LoadingIndicatorView}
-            injectedJavaScript={postMessageForOauth}
-            onMessage={this.handleOauthMessage}
-            javaScriptEnabled={true}
-            startInLoadingState
-            style={styles.widget}
-            onNavigationStateChange={navState => {
-              console.log("navState ", navState);
-          }}
-          />
-        </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+
+  backgroundStyle: {
+    backgroundColor: Colors.lighter,
+    flex: 1,
+    height: '100%',
+  },
 
   header: {
     alignSelf: 'stretch',
@@ -206,6 +311,11 @@ const styles = StyleSheet.create({
   },
 
   widget: {
+    width: '100%',
+    height: '100%'
+  },
+
+  lightbox: {
     width: '100%',
     height: '100%'
   },
@@ -257,6 +367,14 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 14,
     fontWeight: 'bold',
+  },
+
+  payButton: {
+    backgroundColor: '#147EFB', 
+    padding: 10,
+    borderRadius: 4,
+    alignItems: 'center',
+    margin: 15,
   },
 
 });
