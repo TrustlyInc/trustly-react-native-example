@@ -27,7 +27,8 @@ merchantReference: "<unique reference code from your app>"
 ```js
 // trustly.tsx
 
-accessId: "<YOUR_ACCESS_ID>",
+?accessId=<YOUR_ACCESS_ID> // line 7
+?accessId=<YOUR_ACCESS_ID> // line 35
 ```
 
 Start the app!
@@ -104,4 +105,60 @@ The example below is from `RedirectActivity`
             <data android:scheme="in-app-browser-rn" />
         </intent-filter>
     </activity>
+```
+
+## How integrate native components with Trustly webview
+Some times you want to integrate the webview rendering Trustly widget with your native components in your application, like the image bellow:
+
+<img src="docs/images/rn_print.png" width="25%" height="25%" style="display: block; margin: 0 auto" />
+
+In this case, we need to avoid that `widget` call the `lightbox` immediatley when the user select a bank, for this beahvior you need to add a peace of javascript inside the `widget` like in the file `trustly.tsx` lines 19 to 23.
+
+```js
+const TrustlyWidgetBankSelected = (data) => {
+  return false;
+}
+
+Trustly.selectBankWidget(establishData, TrustlyOptions, TrustlyWidgetBankSelected);
+```
+
+Now you must to implement in your `webview` a way to handle with 3 events triggered by the `widget` and `lightbox` to handle with the bank selection, close or cancel action and when the authorization finished.
+
+- Bank selection event (`PayWithMyBank.createTransaction`):
+
+```js
+handlePaymentProviderId(data: string) {
+  if(data.startsWith('PayWithMyBank.createTransaction')) {
+    let splitedData = data.split('|')
+
+    this.setState({paymentProviderId: splitedData[1]});
+  }
+}
+```
+
+- Close or cancel event (`close|cancel|`):
+
+```js
+handleWithCancelOrClose(data: string) {
+  if(data.endsWith('close|cancel|')) {
+    this.setState({step: 'widget'});
+  }
+}
+```
+
+- Finish authorization event (`PayWithMyBank.closePanel|`):
+
+```js
+handleClosePanelSuccess(data: string) {
+  if(data.startsWith('PayWithMyBank.closePanel|')) {
+    let returnValues = data.split('|')[1];
+    let returnParameters = returnValues.split('?')[1];
+
+    this.setState({
+      returnParameters: returnParameters,
+      step: 'success'
+    });
+
+  }
+}
 ```
