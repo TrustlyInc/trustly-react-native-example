@@ -9,34 +9,40 @@ import {
 import { WebView } from "react-native-webview";
 import { widget } from "./trustly";
 import { shouldOpenInAppBrowser } from "./oauth-utils";
-
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { getRequestSignature } from './utils/signature';
 
 export default class App extends Component {
   trustlyWebView = null;
 
-  establishData = {
-    accessId: "<YOUR_ACCESS_ID>",
-    merchantId: "<YOUR_MERCHANT_ID>",
-    currency: "USD",
-    amount: "2.00",
-    merchantReference: "<unique reference code from your app>",
-    paymentType: "Retrieval",
-    returnUrl: "/returnUrl",
-    cancelUrl: "/cancelUrl",
-    customer: {
-      name: "John",
-      address: {
-        country: "US",
+  async getEstablishData() {
+    const establishData = {
+      accessId: "TSwGyK52Mnpt5b8C",
+      merchantId: "1127",
+      currency: "USD",
+      amount: "2.00",
+      merchantReference: "g:cac73df7-52b4-47d7-89d3-9628d4cfb65e",
+      paymentType: "Retrieval",
+      returnUrl: "/returnUrl",
+      cancelUrl: "/cancelUrl",
+      customer: {
+        name: "John",
+        address: {
+          country: "US",
+        },
       },
-    },
-    metadata:{
-      integrationContext: "InAppBrowserNotify",
-      urlScheme: "in-app-browser-rn://"
-    },
-    requestSignature: "HT5mVOqBXa8ZlvgX2USmPeLns5o=",
-  };
+      metadata:{
+        integrationContext: "InAppBrowserNotify",
+        urlScheme: "in-app-browser-rn://"
+      },
+      requestSignature: "HT5mVOqBXa8ZlvgX2USmPeLns5o=",
+    };
+
+    // establishData.requestSignature = await getRequestSignature(establishData);
+
+    return establishData
+  }
 
   state = {
     bounceValue: new Animated.Value(1000),
@@ -149,16 +155,18 @@ export default class App extends Component {
     return (
 
         <SafeAreaView style={backgroundStyle}>
-          <WebView
+          {( async () => {
+            const establishDataVal = await this.getEstablishData()
+             return (<WebView
               ref={(ref) => (this.trustlyWebView = ref)}
-              source={{ html: widget(this.establishData) }}
+              source={{ html: widget(establishDataVal) }}
               renderLoading={this.LoadingIndicatorView}
               injectedJavaScript={postMessageForOauth}
               onMessage={this.handleOauthMessage}
               javaScriptEnabled={true}
               startInLoadingState
               style={styles.widget}
-            />
+            /> )})()}
         </SafeAreaView>
     );
   }
