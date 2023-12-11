@@ -11,45 +11,50 @@ import { widget } from "./trustly";
 import { shouldOpenInAppBrowser } from "./oauth-utils";
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { getRequestSignature } from './utils/signature';
+import { getRequestSignature } from "./utils/signature";
+import { EstablishData } from "./types";
 
 export default class App extends Component {
   trustlyWebView = null;
 
-  async getEstablishData() {
-    const establishData = {
-      accessId: "TSwGyK52Mnpt5b8C",
-      merchantId: "1127",
-      currency: "USD",
-      amount: "2.00",
-      merchantReference: "g:cac73df7-52b4-47d7-89d3-9628d4cfb65e",
-      paymentType: "Retrieval",
-      returnUrl: "/returnUrl",
-      cancelUrl: "/cancelUrl",
-      customer: {
-        name: "John",
-        address: {
-          country: "US",
-        },
-      },
-      metadata:{
-        integrationContext: "InAppBrowserNotify",
-        urlScheme: "in-app-browser-rn://"
-      },
-      requestSignature: "HT5mVOqBXa8ZlvgX2USmPeLns5o=",
-    };
-
-    // establishData.requestSignature = await getRequestSignature(establishData);
-
-    return establishData
-  }
-
   state = {
     bounceValue: new Animated.Value(1000),
+    establishData: null
   };
 
   constructor(props) {
     super(props);
+
+    (async () => {
+      const establishData: EstablishData = {
+        accessId: "TSwGyK52Mnpt5b8C",
+        merchantId: "1127",
+        currency: "USD",
+        amount: "2.00",
+        merchantReference: "g:cac73df7-52b4-47d7-89d3-9628d4cfb65e",
+        paymentType: "Retrieval",
+        returnUrl: "/returnUrl",
+        cancelUrl: "/cancelUrl",
+        customer: {
+          name: "John",
+          address: {
+            country: "US",
+          },
+        },
+        metadata: {
+          integrationContext: "InAppBrowserNotify",
+          urlScheme: "in-app-browser-rn://"
+        },
+        // requestSignature: "HT5mVOqBXa8ZlvgX2USmPeLns5o=",
+      }
+
+      const requestSignature = await getRequestSignature(establishData)
+      establishData.requestSignature = requestSignature
+
+      this.setState(() => ({
+        establishData: establishData
+      }))
+    })();
   }
 
   LoadingIndicatorView() {
@@ -112,28 +117,28 @@ export default class App extends Component {
   handleOauthMessage = (message: any) => {
     const data = message.nativeEvent.data
 
-    if ( typeof data !== 'string') return;
+    if (typeof data !== 'string') return;
 
     var [command, ...params] = data.split("|");
 
-    if(command.includes("ExternalBrowserIntegration")) {
+    if (command.includes("ExternalBrowserIntegration")) {
       var messageUrl = params[1]
 
-      if( shouldOpenInAppBrowser(messageUrl) ) {
+      if (shouldOpenInAppBrowser(messageUrl)) {
         this.openLink(messageUrl);
       }
     }
 
   }
 
-  handleOAuthResult = (result: any) =>{
+  handleOAuthResult = (result: any) => {
     if (result.type === 'success') {
       this.trustlyWebView.injectJavaScript('window.Trustly.proceedToChooseAccount();');
     }
   }
 
   render() {
-    const { bounceValue } = this.state;
+    const { establishData } = this.state;
 
     const backgroundStyle = {
       backgroundColor: Colors.lighter,
@@ -154,20 +159,20 @@ export default class App extends Component {
 
     return (
 
-        <SafeAreaView style={backgroundStyle}>
-          {( async () => {
-            const establishDataVal = await this.getEstablishData()
-             return (<WebView
-              ref={(ref) => (this.trustlyWebView = ref)}
-              source={{ html: widget(establishDataVal) }}
-              renderLoading={this.LoadingIndicatorView}
-              injectedJavaScript={postMessageForOauth}
-              onMessage={this.handleOauthMessage}
-              javaScriptEnabled={true}
-              startInLoadingState
-              style={styles.widget}
-            /> )})()}
-        </SafeAreaView>
+      <SafeAreaView style={backgroundStyle}>
+        {establishData && (
+          <WebView
+            ref={(ref) => (this.trustlyWebView = ref)}
+            source={{ html: widget(establishData) }}
+            renderLoading={this.LoadingIndicatorView}
+            injectedJavaScript={postMessageForOauth}
+            onMessage={this.handleOauthMessage}
+            javaScriptEnabled={true}
+            startInLoadingState
+            style={styles.widget}
+          />
+        )}
+      </SafeAreaView>
     );
   }
 }

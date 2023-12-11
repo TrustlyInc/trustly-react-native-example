@@ -1,7 +1,9 @@
-const SIGNATURE_API_URL = "http://localhost:8080/api/signature";
+import { EstablishData } from "../types";
 
-export async function getRequestSignature(establishData) {
-  let requestSignature = "";
+const SIGNATURE_API_URL = "http://localhost:8080/signature";
+
+export async function getRequestSignature(establishData: EstablishData) {
+  let requestSignature;
 
   await fetch(SIGNATURE_API_URL, {
     method: 'POST',
