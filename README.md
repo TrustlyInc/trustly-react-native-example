@@ -77,6 +77,17 @@ handleOauthMessage = (message: any) => {
 }
 ```
 
+## Request Signature
+
+In order to generate dynamically the `requestSignature` attribute into your `EstablishData` object, follow the steps below:
+
+1. Clone and run the [trustly-nestjs-example](https://github.com/TrustlyInc/trustly-nestjs-example), in case you don't have a request signature server set
+2. Add or change the request signature endpoint (e.g. `http://localhost:8080/signature`) into `SIGNATURE_API_URL` variable of the `signature.ts` file
+3. Uncomment the lines inside the `EstablishData` object in the `App.tsx` file
+4. Run your app
+
+Documentation: [Securing Requests](https://amer.developers.trustly.com/payments/docs/securing-requests)
+
 ## Closing Chrome Custom Tab in Android
 
 ### RedirectActivity

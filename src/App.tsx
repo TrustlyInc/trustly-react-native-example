@@ -28,6 +28,7 @@ export default class App extends Component {
     (async () => {
       const establishData: EstablishData = {
         accessId: "<YOUR_ACCESS_ID>",
+        description: "transaction description",
         merchantId: "<YOUR_MERCHANT_ID>",
         currency: "USD",
         amount: "2.00",
@@ -47,8 +48,8 @@ export default class App extends Component {
         },
       }
 
-      const requestSignature = await getRequestSignature(establishData)
-      establishData.requestSignature = requestSignature
+      // const requestSignature = await getRequestSignature(establishData)
+      // establishData.requestSignature = requestSignature
 
       this.setState(() => ({
         establishData: establishData
