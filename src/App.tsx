@@ -27,11 +27,11 @@ export default class App extends Component {
 
     (async () => {
       const establishData: EstablishData = {
-        accessId: "TSwGyK52Mnpt5b8C",
-        merchantId: "1127",
+        accessId: "<YOUR_ACCESS_ID>",
+        merchantId: "<YOUR_MERCHANT_ID>",
         currency: "USD",
         amount: "2.00",
-        merchantReference: "g:cac73df7-52b4-47d7-89d3-9628d4cfb65e",
+        merchantReference: "<unique reference code from your app>",
         paymentType: "Retrieval",
         returnUrl: "/returnUrl",
         cancelUrl: "/cancelUrl",
@@ -45,7 +45,6 @@ export default class App extends Component {
           integrationContext: "InAppBrowserNotify",
           urlScheme: "in-app-browser-rn://"
         },
-        // requestSignature: "HT5mVOqBXa8ZlvgX2USmPeLns5o=",
       }
 
       const requestSignature = await getRequestSignature(establishData)
