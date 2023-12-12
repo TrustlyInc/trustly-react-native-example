@@ -24,7 +24,9 @@ export default class App extends Component {
 
   constructor(props) {
     super(props);
+  }
 
+  componentDidMount() {
     (async () => {
       const establishData: EstablishData = {
         accessId: "<YOUR_ACCESS_ID>",
