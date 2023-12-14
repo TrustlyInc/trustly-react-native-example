@@ -1,10 +1,10 @@
-export const widget = (data = {}) => `<!DOCTYPE html>
+export const widget = (accessId: String, data = {}) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trustly</title>
-  <script src="https://sandbox.trustly.one/start/scripts/pwmb.js?accessId=YOUR_ACCESS_ID>" type="text/javascript"></script>
+  <script src="https://sandbox.trustly.one/start/scripts/trustly.js?accessId=${accessId}" type="text/javascript"></script>
 </head>
 <body>
   <div id="widget"></div>
@@ -26,13 +26,13 @@ export const widget = (data = {}) => `<!DOCTYPE html>
 </body>
 </html>`;
 
-export const lightbox = (data = {}) => `<!DOCTYPE html>
+export const lightbox = (accessId: String, data = {}) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trustly</title>
-  <script src="https://sandbox.trustly.one/start/scripts/pwmb.js?accessId=YOUR_ACCESS_ID>" type="text/javascript"></script>
+  <script src="https://sandbox.trustly.one/start/scripts/trustly.js?accessId=${accessId}" type="text/javascript"></script>
 </head>
 <body>
   <div id="widget"></div>

@@ -19,16 +19,9 @@ Replace the placeholder texts with your credentials:
 ```js
 // App.tsx
 
-accessId: "<YOUR_ACCESS_ID>",
-merchantId: "<YOUR_MERCHANT_ID>",
-merchantReference: "<unique reference code from your app>"
-```
-
-```js
-// trustly.tsx
-
-?accessId=<YOUR_ACCESS_ID> // line 7
-?accessId=<YOUR_ACCESS_ID> // line 35
+ACCESS_ID = "<YOUR_ACCESS_ID>";
+MERCHANT_ID = "<YOUR_MERCHANT_ID>";
+MERCHANT_REFERENCE = "<unique reference code from your app>"; 
 ```
 
 Start the app!
