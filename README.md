@@ -105,7 +105,7 @@ Some times you want to integrate the webview rendering Trustly widget with your 
 
 <img src="docs/images/rn_print.png" width="25%" height="25%" style="display: block; margin: 0 auto" />
 
-In this case, we need to avoid that `widget` call the `lightbox` immediatley when the user select a bank, for this beahvior you need to add a peace of javascript inside the `widget` like in the file `trustly.tsx` lines 19 to 23.
+In this case, we need to avoid that `widget` call the `lightbox` immediatley when the user select a bank, because we need to get the amount value to fill the establish data first, so, for this beahvior we need to add a peace of javascript inside the `widget` like in the file `trustly.tsx` lines 19 to 23.
 
 ```js
 const TrustlyWidgetBankSelected = (data) => {
@@ -117,15 +117,22 @@ Trustly.selectBankWidget(establishData, TrustlyOptions, TrustlyWidgetBankSelecte
 
 Now you must to implement in your `webview` a way to handle with 3 events triggered by the `widget` and `lightbox` to handle with the bank selection, close or cancel action and when the authorization finished.
 
-- Bank selection event (`PayWithMyBank.createTransaction`):
+- Bank selection event (`PayWithMyBank.createTransaction`): In this demonstration app, after select the bank, we redirect the user to the authentication page.
 
 ```js
 handlePaymentProviderId(data: string) {
   if(data.startsWith('PayWithMyBank.createTransaction')) {
     let splitedData = data.split('|')
 
-    this.setState({paymentProviderId: splitedData[1]});
+    this.establishData.amount = this.state.amount;
+    this.establishData.paymentProviderId = splitedData[1];
+
+    this.goToAuthBankSelected();
   }
+}
+
+goToAuthBankSelected = () => {
+  this.setState({step: 'lightbox'});
 }
 ```
 

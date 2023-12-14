@@ -47,7 +47,6 @@ export default class App extends Component {
 
   state = {
     amount: '',
-    paymentProviderId: '',
     step: 'widget',
     returnParameters: '',
   };
@@ -134,7 +133,10 @@ export default class App extends Component {
     if(data.startsWith('PayWithMyBank.createTransaction')) {
       let splitedData = data.split('|')
 
-      this.setState({paymentProviderId: splitedData[1]});
+      this.establishData.amount = this.state.amount;
+      this.establishData.paymentProviderId = splitedData[1];
+      
+      this.goToAuthBankSelected();
     }
   }
 
@@ -167,10 +169,7 @@ export default class App extends Component {
     this.setState({amount});
   }
 
-  onPressPayButton = () => {
-    this.establishData.amount = this.state.amount;
-    this.establishData.paymentProviderId = this.state.paymentProviderId;
-    
+  goToAuthBankSelected = () => {
     this.setState({step: 'lightbox'});
   }
 
@@ -178,7 +177,6 @@ export default class App extends Component {
     this.setState({
       step: 'widget',
       amount: '',
-      paymentProviderId: '',
       returnParameters: '',
     });
   }
@@ -228,13 +226,6 @@ export default class App extends Component {
           startInLoadingState
           style={styles.widget}
       />
-
-      <TouchableOpacity
-        style={styles.payButton}
-        onPress={this.onPressPayButton} 
-        >
-        <Text style={{ color: '#fff' }}>Pay button</Text>
-      </TouchableOpacity>
 
     </SafeAreaView>
   }
