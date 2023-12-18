@@ -18,10 +18,10 @@ import { MaskedTextInput} from "react-native-mask-text";
 
 export default class App extends Component {
   trustlyWebView = null;
-
-  ACCESS_ID = "TSwGyK52Mnpt5b8C";
-  MERCHANT_ID = "1127";
-  MERCHANT_REFERENCE = "g:cac73df7-52b4-47d7-89d3-9628d4cfb65e";
+  
+  ACCESS_ID = "<YOUR_ACCESS_ID>";
+  MERCHANT_ID = "<YOUR_MERCHANT_ID>";
+  MERCHANT_REFERENCE = "<unique reference code from your app>";
 
   state = {
     amount: '',
