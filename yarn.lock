@@ -2387,10 +2387,15 @@ base64-js@^1.1.2, base64-js@^1.3.1:
   resolved "https://repository.paywithmybank.com/repository/npm/base64-js/-/base64-js-1.5.1.tgz"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
-bl@^4.1.0:
-  version "4.1.0"
-  resolved "https://repository.paywithmybank.com/repository/npm/bl/-/bl-4.1.0.tgz"
-  integrity sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==
+"bignumber.js@^9.0.1":
+  "integrity" "sha512-2/mKyZH9K85bzOEfhXDBFZTGd1CTs+5IHpeFQo9luiBG7hghdC851Pj2WAhb6E3R6b9tZj/XKhbg4fum+Kepug=="
+  "resolved" "https://registry.npmjs.org/bignumber.js/-/bignumber.js-9.1.2.tgz"
+  "version" "9.1.2"
+
+"bl@^4.1.0":
+  "integrity" "sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w=="
+  "resolved" "https://registry.npmjs.org/bl/-/bl-4.1.0.tgz"
+  "version" "4.1.0"
   dependencies:
     buffer "^5.5.0"
     inherits "^2.0.4"
@@ -5470,10 +5475,17 @@ react-native-inappbrowser-reborn@^3.7.0:
     invariant "^2.2.4"
     opencollective-postinstall "^2.0.3"
 
-react-native-webview@^13.6.0:
-  version "13.6.3"
-  resolved "https://repository.paywithmybank.com/repository/npm/react-native-webview/-/react-native-webview-13.6.3.tgz"
-  integrity sha512-IApO0JSj0uAWsBGKWagyfgDYoX29piiMYLmkHtRjKeL1rIVjLoR/bMe7KJ/0X47y86b//a6u3cYQtphyay+F2A==
+"react-native-mask-text@^0.14.2":
+  "integrity" "sha512-WP80f9y4+Kzg+TRmL3Qldp71iu0Sni3pCjyw90JvEM0r274iuWLZd+EylXtP2bYM/C5p1sZWvLstADYocdLGaA=="
+  "resolved" "https://registry.npmjs.org/react-native-mask-text/-/react-native-mask-text-0.14.2.tgz"
+  "version" "0.14.2"
+  dependencies:
+    "bignumber.js" "^9.0.1"
+
+"react-native-webview@^13.6.0":
+  "integrity" "sha512-KapVfHEj60e+2QplhqoCMdqW4vDzzvLS3YasfjVoMV4qhsZ3padncMEqOHX6AY4FIAdRzAxG0JQs+kXczAPYeQ=="
+  "resolved" "https://registry.npmjs.org/react-native-webview/-/react-native-webview-13.6.0.tgz"
+  "version" "13.6.0"
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
