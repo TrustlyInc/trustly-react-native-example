@@ -25,6 +25,7 @@ export default class App extends Component {
 
   state = {
     amount: '',
+    establishData: null,
     step: 'widget',
     returnParameters: '',
   };
@@ -144,8 +145,14 @@ export default class App extends Component {
     if(data.startsWith('PayWithMyBank.createTransaction')) {
       let splitedData = data.split('|')
 
-      this.establishData.amount = this.state.amount;
-      this.establishData.paymentProviderId = splitedData[1];
+      this.setState((prevState) => ({
+        ...prevState,
+        establishData: {
+          ...prevState.establishData,
+          amount: this.state.amount,
+          paymentProviderId: splitedData[1],
+        }
+      }))
       
       this.goToAuthBankSelected();
     }
@@ -203,7 +210,7 @@ export default class App extends Component {
     );`;
 
   buildWidgetScreen = () => {
-
+    const { establishData } = this.state;
     const mask = '0.00';
 
     return <SafeAreaView style={styles.backgroundStyle}>
@@ -227,9 +234,10 @@ export default class App extends Component {
         keyboardType="numeric"
       />
         
-      <WebView
+      {establishData && (
+        <WebView
           ref={(ref) => (this.trustlyWebView = ref)}
-          source={{ html: widget(this.ACCESS_ID, this.establishData) }}
+          source={{ html: widget(this.ACCESS_ID, establishData) }}
           renderLoading={this.LoadingIndicatorView}
           injectedJavaScript={this.postMessageForOauth}
           onMessage={this.handleOauthMessage}
@@ -237,17 +245,20 @@ export default class App extends Component {
           startInLoadingState
           style={styles.widget}
       />
+      )}
 
     </SafeAreaView>
   }
 
   buildLightBoxScreen = () => {
+    const { establishData } = this.state;
 
     return <SafeAreaView style={styles.backgroundStyle}>
         
-      <WebView
+      {establishData && (
+        <WebView
           ref={(ref) => (this.trustlyWebView = ref)}
-          source={{ html: lightbox(this.ACCESS_ID, this.establishData) }}
+          source={{ html: lightbox(this.ACCESS_ID, establishData) }}
           renderLoading={this.LoadingIndicatorView}
           injectedJavaScript={this.postMessageForOauth}
           onMessage={this.handleOauthMessage}
@@ -255,6 +266,7 @@ export default class App extends Component {
           startInLoadingState
           style={styles.widget}
       />
+      )}
 
     </SafeAreaView>
   }
