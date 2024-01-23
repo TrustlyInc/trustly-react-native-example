@@ -1,3 +1,4 @@
+import { EstablishData } from './types';
 import { getRequestSignature } from './utils/signature';
 
 export const widget = (accessId: String, data = {}) => `<!DOCTYPE html>
@@ -28,7 +29,7 @@ export const widget = (accessId: String, data = {}) => `<!DOCTYPE html>
 </body>
 </html>`;
 
-export const lightbox = async (accessId: String, data) => {
+export const lightbox = async (accessId: String, data: EstablishData) => {
   if (!data) return;
 
   const requestSignature = await getRequestSignature(data);

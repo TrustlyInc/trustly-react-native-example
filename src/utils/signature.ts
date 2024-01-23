@@ -1,6 +1,7 @@
 import { SIGNATURE_API_URL } from '../env';
+import { EstablishData } from '../types';
 
-export async function getRequestSignature(establishData) {
+export async function getRequestSignature(establishData: EstablishData) {
   let requestSignature = null;
 
   await fetch(SIGNATURE_API_URL, {

@@ -10,6 +10,7 @@ import {
 import { WebView } from "react-native-webview";
 import { ACCESS_ID, MERCHANT_ID, MERCHANT_REFERENCE } from './env';
 import { widget, lightbox } from "./trustly";
+import { EstablishData } from './types';
 import { shouldOpenInAppBrowser } from "./oauth-utils";
 
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
@@ -19,7 +20,7 @@ import { MaskedTextInput} from "react-native-mask-text";
 export default class App extends Component {
   trustlyWebView = null;
 
-  establishData = {
+  establishData: EstablishData = {
     accessId: ACCESS_ID,
     merchantId: MERCHANT_ID,
     currency: "USD",
