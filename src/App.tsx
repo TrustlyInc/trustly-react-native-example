@@ -39,11 +39,11 @@ export default class App extends Component {
       integrationContext: "InAppBrowserNotify",
       urlScheme: "in-app-browser-rn://"
     },
-    requestSignature: "HT5mVOqBXa8ZlvgX2USmPeLns5o=",
   };
 
   state = {
     amount: '0.00',
+    lightboxComponent: '',
     step: 'widget',
     returnParameters: '',
   };
@@ -167,7 +167,7 @@ export default class App extends Component {
   }
 
   goToAuthBankSelected = () => {
-    this.setState({step: 'lightbox'});
+    this.buildLightBoxScreen();
   }
 
   onPressBackToWidget = () => {
@@ -227,22 +227,27 @@ export default class App extends Component {
     </SafeAreaView>
   }
 
-  buildLightBoxScreen = () => {
+  buildLightBoxScreen = async () => {
+    const html = await lightbox(ACCESS_ID, this.establishData);
 
-    return <SafeAreaView style={styles.backgroundStyle}>
-        
-      <WebView
-          ref={(ref) => (this.trustlyWebView = ref)}
-          source={{ html: lightbox(ACCESS_ID, this.establishData) }}
-          renderLoading={this.LoadingIndicatorView}
-          injectedJavaScript={this.postMessageForOauth}
-          onMessage={this.handleOauthMessage}
-          javaScriptEnabled={true}
-          startInLoadingState
-          style={styles.widget}
-      />
+    this.setState({
+      lightboxComponent: (
+        <SafeAreaView style={styles.backgroundStyle}>
+          <WebView
+            ref={(ref) => (this.trustlyWebView = ref)}
+            source={{ html }}
+            renderLoading={this.LoadingIndicatorView}
+            injectedJavaScript={this.postMessageForOauth}
+            onMessage={this.handleOauthMessage}
+            javaScriptEnabled={true}
+            startInLoadingState
+            style={styles.widget}
+          />
+        </SafeAreaView>
+      ),
+    });
 
-    </SafeAreaView>
+    this.setState({ step: 'lightbox' });
   }
 
   buildResultScreen = () => {
@@ -271,7 +276,7 @@ export default class App extends Component {
     return (
 
       (this.state.step === 'widget') ? this.buildWidgetScreen() : 
-      (this.state.step === 'lightbox') ? this.buildLightBoxScreen() : this.buildResultScreen()
+      (this.state.step === 'lightbox') ? this.state.lightboxComponent : this.buildResultScreen()
 
     );
   }

@@ -1,3 +1,5 @@
+import { getRequestSignature } from './utils/signature';
+
 export const widget = (accessId: String, data = {}) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,26 +28,35 @@ export const widget = (accessId: String, data = {}) => `<!DOCTYPE html>
 </body>
 </html>`;
 
-export const lightbox = (accessId: String, data = {}) => `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trustly</title>
-  <script src="https://sandbox.trustly.one/start/scripts/trustly.js?accessId=${accessId}" type="text/javascript"></script>
-</head>
-<body>
-  <div id="widget"></div>
-  <script>
-    var establishData = ${JSON.stringify(data)};
-    var TrustlyOptions = {
-      closeButton: false,
-      dragAndDrop: true,
-      widgetContainerId: "widget",
-    };
+export const lightbox = async (accessId: String, data) => {
+  if (!data) return;
 
-    Trustly.establish(establishData, TrustlyOptions);
+  const requestSignature = await getRequestSignature(data);
+  data.requestSignature = requestSignature || '';
 
-  </script>
-</body>
-</html>`;
+  return `
+    <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Trustly</title>
+        <script src="https://sandbox.trustly.one/start/scripts/trustly.js?accessId=${accessId}" type="text/javascript"></script>
+      </head>
+      <body>
+        <div id="widget"></div>
+        <script>
+          var establishData = ${JSON.stringify(data)};
+          var TrustlyOptions = {
+            closeButton: false,
+            dragAndDrop: true,
+            widgetContainerId: "widget",
+          };
+
+          Trustly.establish(establishData, TrustlyOptions);
+
+        </script>
+      </body>
+    </html>
+  `;
+};
