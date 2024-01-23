@@ -1,5 +1,4 @@
 node_modules
-package-lock.json
 android/.gradle
 android/app/build
 android/.idea
