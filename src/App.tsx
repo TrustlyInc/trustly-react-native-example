@@ -43,7 +43,7 @@ export default class App extends Component {
   };
 
   state = {
-    amount: '',
+    amount: '0.00',
     step: 'widget',
     returnParameters: '',
   };
@@ -173,7 +173,7 @@ export default class App extends Component {
   onPressBackToWidget = () => {
     this.setState({
       step: 'widget',
-      amount: '',
+      amount: '0.00',
       returnParameters: '',
     });
   }
