@@ -160,3 +160,16 @@ handleClosePanelSuccess(data: string) {
   }
 }
 ```
+
+## Server Side Features
+
+This example project can be run entirely as a frontend app in order to quickly test basic Trustly functions. However, your application will likely require backend integration with Trustly as well. Check out our [trustly-nestjs-example](https://github.com/TrustlyInc/trustly-nestjs-example) project to learn more and follow the steps below to integrate it with this app.
+
+### Request Signature
+
+Documentation: [Securing Requests](https://amer.developers.trustly.com/payments/docs/securing-requests)
+
+1. Clone and run the [trustly-nestjs-example](https://github.com/TrustlyInc/trustly-nestjs-example), in case you don't have a request signature server set
+2. Add the request signature endpoint (e.g. `http://localhost:8080/signature` in the NestJS Example) into the `SIGNATURE_API_URL` variable of the `env.ts` file
+3. Uncomment the `getRequestSignature` code snippet in the `trustly.tsx` file
+4. Run your app
