@@ -8,6 +8,7 @@ import {
   Text,
 } from "react-native";
 import { WebView } from "react-native-webview";
+import { ACCESS_ID, MERCHANT_ID, MERCHANT_REFERENCE } from './env';
 import { widget, lightbox } from "./trustly";
 import { shouldOpenInAppBrowser } from "./oauth-utils";
 
@@ -18,16 +19,12 @@ import { MaskedTextInput} from "react-native-mask-text";
 export default class App extends Component {
   trustlyWebView = null;
 
-  ACCESS_ID = "<YOUR_ACCESS_ID>";
-  MERCHANT_ID = "<YOUR_MERCHANT_ID>";
-  MERCHANT_REFERENCE = "<unique reference code from your app>";
-
   establishData = {
-    accessId: this.ACCESS_ID,
-    merchantId: this.MERCHANT_ID,
+    accessId: ACCESS_ID,
+    merchantId: MERCHANT_ID,
     currency: "USD",
     amount: "0.00",
-    merchantReference: this.MERCHANT_REFERENCE,
+    merchantReference: MERCHANT_REFERENCE,
     paymentType: "Retrieval",
     returnUrl: "/returnUrl",
     cancelUrl: "/cancelUrl",
@@ -218,7 +215,7 @@ export default class App extends Component {
         
       <WebView
           ref={(ref) => (this.trustlyWebView = ref)}
-          source={{ html: widget(this.ACCESS_ID, this.establishData) }}
+          source={{ html: widget(ACCESS_ID, this.establishData) }}
           renderLoading={this.LoadingIndicatorView}
           injectedJavaScript={this.postMessageForOauth}
           onMessage={this.handleOauthMessage}
@@ -236,7 +233,7 @@ export default class App extends Component {
         
       <WebView
           ref={(ref) => (this.trustlyWebView = ref)}
-          source={{ html: lightbox(this.ACCESS_ID, this.establishData) }}
+          source={{ html: lightbox(ACCESS_ID, this.establishData) }}
           renderLoading={this.LoadingIndicatorView}
           injectedJavaScript={this.postMessageForOauth}
           onMessage={this.handleOauthMessage}

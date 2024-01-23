@@ -15,14 +15,7 @@ cd trustly-react-native-example && npm install
 cd ios && pod install
 ```
 
-Replace the placeholder texts with your credentials:
-```js
-// App.tsx
-
-ACCESS_ID = "<YOUR_ACCESS_ID>";
-MERCHANT_ID = "<YOUR_MERCHANT_ID>";
-MERCHANT_REFERENCE = "<unique reference code from your app>"; 
-```
+Copy the `env.example.ts` file to a new `env.ts` file and fill out your environment variables
 
 Start the app!
 `npm start` or `npx react-native start` if you have not installed `react-native-cli`
