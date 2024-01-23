@@ -3,22 +3,26 @@
 This example application demonstrates how the Trustly UI can be integrated with a React Native app. In addition to this example, also see the Trustly developer docs for [React Native](https://amer.developers.trustly.com/payments/docs/react-native) apps.
 
 ## Getting Started
-Clone this repository
+
+### 1. Clone this repository
 
 ```shell
 git clone git@github.com:TrustlyInc/trustly-react-native-example.git
 ```
-Install dependencies
+
+### 2. Install dependencies
 
 ```shell
 cd trustly-react-native-example && npm install
 cd ios && pod install
 ```
 
-Copy the `env.example.ts` file to a new `env.ts` file and fill out your environment variables
+### 3. Copy the `env.example.ts` file to a new `env.ts` file and fill out your environment variables
 
-Start the app!
+### 4. Start the app!
+
 `npm start` or `npx react-native start` if you have not installed `react-native-cli`
+
 ## How it works
 
 Integrations in React Native must inform the `integrationContext` parameter with the value `InAppBrowserNotify` in the establish data, as in the example below:
@@ -94,6 +98,7 @@ The example below is from `RedirectActivity`
 ```
 
 ## How integrate native components with Trustly webview
+
 Some times you want to integrate the webview rendering Trustly widget with your native components in your application, like the image bellow:
 
 <img src="docs/images/rn_print.png" width="25%" height="25%" style="display: block; margin: 0 auto" />
