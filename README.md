@@ -99,7 +99,7 @@ The example below is from `RedirectActivity`
 
 ## How integrate native components with Trustly webview
 
-Some times you want to integrate the webview rendering Trustly widget with your native components in your application, like the image bellow:
+Trustly UI offers two types of user experiences that can be configured to fit your application. The primary method is to render the Select Bank Widget (shown below) which allows users to quickly search for and select a bank to begin the authorization process. See the [Trustly UI docs](https://amer.developers.trustly.com/payments/docs/sdk#select-bank-widget) for more details.
 
 <img src="docs/images/rn_print.png" width="25%" height="25%" style="display: block; margin: 0 auto" />
 
