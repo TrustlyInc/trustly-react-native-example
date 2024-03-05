@@ -8,7 +8,9 @@ import {
   Text,
 } from "react-native";
 import { WebView } from "react-native-webview";
+import { ACCESS_ID, MERCHANT_ID, MERCHANT_REFERENCE } from './env';
 import { widget, lightbox } from "./trustly";
+import { EstablishData } from './types';
 import { shouldOpenInAppBrowser } from "./oauth-utils";
 
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
@@ -18,16 +20,12 @@ import { MaskedTextInput} from "react-native-mask-text";
 export default class App extends Component {
   trustlyWebView = null;
 
-  ACCESS_ID = "<YOUR_ACCESS_ID>";
-  MERCHANT_ID = "<YOUR_MERCHANT_ID>";
-  MERCHANT_REFERENCE = "<unique reference code from your app>";
-
-  establishData = {
-    accessId: this.ACCESS_ID,
-    merchantId: this.MERCHANT_ID,
+  establishData: EstablishData = {
+    accessId: ACCESS_ID,
+    merchantId: MERCHANT_ID,
     currency: "USD",
     amount: "0.00",
-    merchantReference: this.MERCHANT_REFERENCE,
+    merchantReference: MERCHANT_REFERENCE,
     paymentType: "Retrieval",
     returnUrl: "/returnUrl",
     cancelUrl: "/cancelUrl",
@@ -42,11 +40,11 @@ export default class App extends Component {
       integrationContext: "InAppBrowserNotify",
       urlScheme: "in-app-browser-rn://"
     },
-    requestSignature: "HT5mVOqBXa8ZlvgX2USmPeLns5o=",
   };
 
   state = {
-    amount: '',
+    amount: '0.00',
+    lightboxComponent: '',
     step: 'widget',
     returnParameters: '',
   };
@@ -170,13 +168,13 @@ export default class App extends Component {
   }
 
   goToAuthBankSelected = () => {
-    this.setState({step: 'lightbox'});
+    this.buildLightBoxScreen();
   }
 
   onPressBackToWidget = () => {
     this.setState({
       step: 'widget',
-      amount: '',
+      amount: '0.00',
       returnParameters: '',
     });
   }
@@ -218,7 +216,7 @@ export default class App extends Component {
         
       <WebView
           ref={(ref) => (this.trustlyWebView = ref)}
-          source={{ html: widget(this.ACCESS_ID, this.establishData) }}
+          source={{ html: widget(ACCESS_ID, this.establishData) }}
           renderLoading={this.LoadingIndicatorView}
           injectedJavaScript={this.postMessageForOauth}
           onMessage={this.handleOauthMessage}
@@ -230,22 +228,27 @@ export default class App extends Component {
     </SafeAreaView>
   }
 
-  buildLightBoxScreen = () => {
+  buildLightBoxScreen = async () => {
+    const html = await lightbox(ACCESS_ID, this.establishData);
 
-    return <SafeAreaView style={styles.backgroundStyle}>
-        
-      <WebView
-          ref={(ref) => (this.trustlyWebView = ref)}
-          source={{ html: lightbox(this.ACCESS_ID, this.establishData) }}
-          renderLoading={this.LoadingIndicatorView}
-          injectedJavaScript={this.postMessageForOauth}
-          onMessage={this.handleOauthMessage}
-          javaScriptEnabled={true}
-          startInLoadingState
-          style={styles.widget}
-      />
+    this.setState({
+      lightboxComponent: (
+        <SafeAreaView style={styles.backgroundStyle}>
+          <WebView
+            ref={(ref) => (this.trustlyWebView = ref)}
+            source={{ html }}
+            renderLoading={this.LoadingIndicatorView}
+            injectedJavaScript={this.postMessageForOauth}
+            onMessage={this.handleOauthMessage}
+            javaScriptEnabled={true}
+            startInLoadingState
+            style={styles.widget}
+          />
+        </SafeAreaView>
+      ),
+    });
 
-    </SafeAreaView>
+    this.setState({ step: 'lightbox' });
   }
 
   buildResultScreen = () => {
@@ -274,7 +277,7 @@ export default class App extends Component {
     return (
 
       (this.state.step === 'widget') ? this.buildWidgetScreen() : 
-      (this.state.step === 'lightbox') ? this.buildLightBoxScreen() : this.buildResultScreen()
+      (this.state.step === 'lightbox') ? this.state.lightboxComponent : this.buildResultScreen()
 
     );
   }

@@ -3,29 +3,26 @@
 This example application demonstrates how the Trustly UI can be integrated with a React Native app. In addition to this example, also see the Trustly developer docs for [React Native](https://amer.developers.trustly.com/payments/docs/react-native) apps.
 
 ## Getting Started
-Clone this repository
+
+### 1. Clone this repository
 
 ```shell
 git clone git@github.com:TrustlyInc/trustly-react-native-example.git
 ```
-Install dependencies
+
+### 2. Install dependencies
 
 ```shell
 cd trustly-react-native-example && npm install
 cd ios && pod install
 ```
 
-Replace the placeholder texts with your credentials:
-```js
-// App.tsx
+### 3. Copy the `env.example.ts` file to a new `env.ts` file and fill out your environment variables
 
-ACCESS_ID = "<YOUR_ACCESS_ID>";
-MERCHANT_ID = "<YOUR_MERCHANT_ID>";
-MERCHANT_REFERENCE = "<unique reference code from your app>"; 
-```
+### 4. Start the app!
 
-Start the app!
 `npm start` or `npx react-native start` if you have not installed `react-native-cli`
+
 ## How it works
 
 Integrations in React Native must inform the `integrationContext` parameter with the value `InAppBrowserNotify` in the establish data, as in the example below:
@@ -101,7 +98,8 @@ The example below is from `RedirectActivity`
 ```
 
 ## How integrate native components with Trustly webview
-Some times you want to integrate the webview rendering Trustly widget with your native components in your application, like the image bellow:
+
+Trustly UI offers two types of user experiences that can be configured to fit your application. The primary method is to render the Select Bank Widget (shown below) which allows users to quickly search for and select a bank to begin the authorization process. See the [Trustly UI docs](https://amer.developers.trustly.com/payments/docs/sdk#select-bank-widget) for more details.
 
 <img src="docs/images/rn_print.png" width="25%" height="25%" style="display: block; margin: 0 auto" />
 
@@ -162,3 +160,16 @@ handleClosePanelSuccess(data: string) {
   }
 }
 ```
+
+## Server Side Features
+
+This example project can be run entirely as a frontend app in order to quickly test basic Trustly functions. However, your application will likely require backend integration with Trustly as well. Check out our [trustly-nestjs-example](https://github.com/TrustlyInc/trustly-nestjs-example) project to learn more and follow the steps below to integrate it with this app.
+
+### Request Signature
+
+Documentation: [Securing Requests](https://amer.developers.trustly.com/payments/docs/securing-requests)
+
+1. Clone and run the [trustly-nestjs-example](https://github.com/TrustlyInc/trustly-nestjs-example), in case you don't have a request signature server set
+2. Add the request signature endpoint (e.g. `http://localhost:8080/signature` in the NestJS Example) into the `SIGNATURE_API_URL` variable of the `env.ts` file
+3. Uncomment the `getRequestSignature` code snippet in the `trustly.tsx` file
+4. Run your app
