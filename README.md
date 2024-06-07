@@ -21,7 +21,7 @@ cd ios && pod install
 
 ### 4. Start the app!
 
-`npm start` or `npx react-native start` if you have not installed `react-native-cli`
+`npm start` or `npx react-native start` (if you don't have `react-native-cli` installed)
 
 ## How it works
 
@@ -38,20 +38,20 @@ let establishData = {
 };
 ```
 
-After that, when an Oauth bank is selected in the Trustly Lightbox, a message will be triggered and must be captured by the `onMessage` attribute of the WebView, as in the example below (and in the App.tsx file):
+After that, when an OAuth bank is selected in the Trustly Lightbox, a message will be triggered and must be captured by the `onMessage` attribute of the WebView, as in the example below (and in the App.tsx file):
 
 ```js
 <WebView
   ...
-  onMessage={this.handleOauthMessage}
+  onMessage={this.handleOAuthMessage}
   ...
 />
 ```
 
-The function informed in `onMessage` will receive the message with a url that must be opened in an in-app-browser, as in the example below (and in the App.tsx file):
+The function informed in `onMessage` will receive the message with a URL that must be opened in an in-app browser, as in the example below (and in the App.tsx file):
 
 ```javascript
-handleOauthMessage = (message: any) => {
+handleOAuthMessage = (message: any) => {
   const data = message.nativeEvent.data
 
   if ( typeof data !== 'string') return;
@@ -68,12 +68,13 @@ handleOauthMessage = (message: any) => {
 }
 ```
 
-## Closing Chrome Custom Tab in Android
+## Closing Chrome Custom Tabs on Android
 
 ### RedirectActivity
 
-When the application receive some action for example `in-app-browser-rn`, or the name that you defined in `urlScheme`, it will call your target Activity with some flags, and reload it.
-The example below is from `RedirectActivity`
+When the application receives some action like `in-app-browser-rn` (or any name that you defined in the `urlScheme`), it will call your target Activity with some flags, and reload it.
+
+The example below is from `RedirectActivity`:
 
 ```java
     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -97,13 +98,13 @@ The example below is from `RedirectActivity`
     </activity>
 ```
 
-## How integrate native components with Trustly webview
+## How to integrate native components with Trustly WebView
 
 Trustly UI offers two types of user experiences that can be configured to fit your application. The primary method is to render the Select Bank Widget (shown below) which allows users to quickly search for and select a bank to begin the authorization process. See the [Trustly UI docs](https://amer.developers.trustly.com/payments/docs/sdk#select-bank-widget) for more details.
 
 <img src="docs/images/rn_print.png" width="25%" height="25%" style="display: block; margin: 0 auto" />
 
-In this case, we need to avoid that `widget` call the `lightbox` immediatley when the user select a bank, because we need to get the amount value to fill the establish data first, so, for this beahvior we need to add a peace of javascript inside the `widget` like in the file `trustly.tsx` lines 19 to 23.
+In this case, we need to avoid the Widget calling the Lightbox immediately when the user selects a bank because we need to get the amount value to fill the establish data first. To achieve this, we need to add a piece of JavaScript inside the Widget (as in the `trustly.tsx` file).
 
 ```js
 const TrustlyWidgetBankSelected = (data) => {
@@ -113,17 +114,17 @@ const TrustlyWidgetBankSelected = (data) => {
 Trustly.selectBankWidget(establishData, TrustlyOptions, TrustlyWidgetBankSelected);
 ```
 
-Now you must to implement in your `webview` a way to handle with 3 events triggered by the `widget` and `lightbox` to handle with the bank selection, close or cancel action and when the authorization finished.
+Now, you must implement in your WebView a way to handle the 3 events triggered by the Widget and Lightbox to handle the bank selection, close or cancel action, and when the authorization ends.
 
-- Bank selection event (`PayWithMyBank.createTransaction`): In this demonstration app, after select the bank, we redirect the user to the authentication page.
+- Bank selection event (`PayWithMyBank.createTransaction`): In this demonstration app, after selecting the bank, we redirect the user to the authentication page.
 
 ```js
 handlePaymentProviderId(data: string) {
   if(data.startsWith('PayWithMyBank.createTransaction')) {
-    let splitedData = data.split('|')
+    let splitData = data.split('|')
 
     this.establishData.amount = this.state.amount;
-    this.establishData.paymentProviderId = splitedData[1];
+    this.establishData.paymentProviderId = splitData[1];
 
     this.goToAuthBankSelected();
   }
