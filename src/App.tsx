@@ -1,21 +1,22 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+
 import {
-  StyleSheet,
   ActivityIndicator,
   Linking,
   SafeAreaView,
-  TouchableOpacity,
+  StyleSheet,
   Text,
-} from "react-native";
-import { WebView } from "react-native-webview";
-import { ACCESS_ID, MERCHANT_ID, MERCHANT_REFERENCE } from './env';
-import { widget, lightbox } from "./trustly";
-import { EstablishData } from './types';
-import { shouldOpenInAppBrowser } from "./oauth-utils";
+  TouchableOpacity,
+} from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { InAppBrowser } from 'react-native-inappbrowser-reborn';
+import { MaskedTextInput } from 'react-native-mask-text';
+import { WebView } from 'react-native-webview';
 
-import { InAppBrowser } from 'react-native-inappbrowser-reborn'
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import { MaskedTextInput} from "react-native-mask-text";
+import { ACCESS_ID, MERCHANT_ID, MERCHANT_REFERENCE } from './env';
+import { shouldOpenInAppBrowser } from './oauth-utils';
+import { widget, lightbox } from './trustly';
+import { EstablishData } from './types';
 
 export default class App extends Component {
   trustlyWebView = null;
@@ -23,22 +24,22 @@ export default class App extends Component {
   establishData: EstablishData = {
     accessId: ACCESS_ID,
     merchantId: MERCHANT_ID,
-    currency: "USD",
-    amount: "0.00",
+    currency: 'USD',
+    amount: '0.00',
     merchantReference: MERCHANT_REFERENCE,
-    paymentType: "Retrieval",
-    returnUrl: "/returnUrl",
-    cancelUrl: "/cancelUrl",
-    description: "First Data Mobile Test",
+    paymentType: 'Retrieval',
+    returnUrl: '/returnUrl',
+    cancelUrl: '/cancelUrl',
+    description: 'First Data Mobile Test',
     customer: {
-      name: "John",
+      name: 'John',
       address: {
-        country: "US",
+        country: 'US',
       },
     },
-    metadata:{
-      integrationContext: "InAppBrowserNotify",
-      urlScheme: "in-app-browser-rn://"
+    metadata: {
+      integrationContext: 'InAppBrowserNotify',
+      urlScheme: 'in-app-browser-rn://',
     },
   };
 
@@ -55,14 +56,13 @@ export default class App extends Component {
 
   LoadingIndicatorView() {
     return (
-      <ActivityIndicator color="#333" size="small" style={styles.loading} />
+      <ActivityIndicator color='#333' size='small' style={styles.loading} />
     );
   }
 
   async openLink(url: string) {
     try {
       if (await InAppBrowser.isAvailable()) {
-
         const result = await InAppBrowser.openAuth(url, '', {
           // iOS Properties
           ephemeralWebSession: true,
@@ -90,86 +90,84 @@ export default class App extends Component {
             startEnter: 'slide_in_right',
             startExit: 'slide_out_left',
             endEnter: 'slide_in_left',
-            endExit: 'slide_out_right'
+            endExit: 'slide_out_right',
           },
           headers: {
-            'my-custom-header': 'my custom header value'
-          }
+            'my-custom-header': 'my custom header value',
+          },
         }).then((response) => {
           this.handleOAuthResult(response);
         });
-
-      }
-      else Linking.openURL(url)
+      } else Linking.openURL(url);
     } catch (error) {
       console.log(error);
     }
   }
 
   handleOauthMessage = (message: any) => {
-    const data = message.nativeEvent.data
-    
-    if ( typeof data !== 'string') return;
+    const data = message.nativeEvent.data;
+
+    if (typeof data !== 'string') return;
 
     this.handlePaymentProviderId(data);
     this.handleWithCancelOrClose(data);
     this.handleClosePanelSuccess(data);
 
-    var [command, ...params] = data.split("|");
+    var [command, ...params] = data.split('|');
 
-    if(command.includes("ExternalBrowserIntegration")) {
-      var messageUrl = params[1]
+    if (command.includes('ExternalBrowserIntegration')) {
+      var messageUrl = params[1];
 
-      if( shouldOpenInAppBrowser(messageUrl) ) {
+      if (shouldOpenInAppBrowser(messageUrl)) {
         this.openLink(messageUrl);
       }
     }
-
-  }
+  };
 
   handlePaymentProviderId(data: string) {
-    if(data.startsWith('PayWithMyBank.createTransaction')) {
-      let splitedData = data.split('|')
+    if (data.startsWith('PayWithMyBank.createTransaction')) {
+      let splitedData = data.split('|');
 
       this.establishData.amount = this.state.amount;
       this.establishData.paymentProviderId = splitedData[1];
-      
+
       this.goToAuthBankSelected();
     }
   }
 
   handleWithCancelOrClose(data: string) {
-    if(data.endsWith('close|cancel|')) {
-      this.setState({step: 'widget'});
+    if (data.endsWith('close|cancel|')) {
+      this.setState({ step: 'widget' });
     }
   }
 
   handleClosePanelSuccess(data: string) {
-    if(data.startsWith('PayWithMyBank.closePanel|')) {
+    if (data.startsWith('PayWithMyBank.closePanel|')) {
       let returnValues = data.split('|')[1];
       let returnParameters = returnValues.split('?')[1];
 
       this.setState({
         returnParameters: returnParameters,
-        step: 'success'
+        step: 'success',
       });
-
     }
   }
 
-  handleOAuthResult = (result: any) =>{
+  handleOAuthResult = (result: any) => {
     if (result.type === 'success') {
-      this.trustlyWebView.injectJavaScript('window.Trustly.proceedToChooseAccount();');
+      this.trustlyWebView.injectJavaScript(
+        'window.Trustly.proceedToChooseAccount();'
+      );
     }
-  }
+  };
 
   onChangeAmount = (amount: string) => {
-    this.setState({amount});
-  }
+    this.setState({ amount });
+  };
 
   goToAuthBankSelected = () => {
     this.buildLightBoxScreen();
-  }
+  };
 
   onPressBackToWidget = () => {
     this.setState({
@@ -177,7 +175,7 @@ export default class App extends Component {
       amount: '0.00',
       returnParameters: '',
     });
-  }
+  };
 
   postMessageForOauth = `
     window.addEventListener(
@@ -190,31 +188,28 @@ export default class App extends Component {
     );`;
 
   buildWidgetScreen = () => {
-
     const mask = '0.00';
 
-    return <SafeAreaView style={styles.backgroundStyle}>
+    return (
+      <SafeAreaView style={styles.backgroundStyle}>
+        <Text style={styles.amountText}>{`Amount:`}</Text>
 
-      <Text style={styles.amountText}>
-        {`Amount:`}
-      </Text>
+        <MaskedTextInput
+          type='currency'
+          options={{
+            prefix: '',
+            decimalSeparator: '.',
+            groupSeparator: ',',
+            precision: 2,
+          }}
+          onChangeText={(amount, rawAmount) => {
+            this.onChangeAmount(amount);
+          }}
+          style={styles.input}
+          keyboardType='numeric'
+        />
 
-      <MaskedTextInput
-        type="currency"
-        options={{
-          prefix: '',
-          decimalSeparator: '.',
-          groupSeparator: ',',
-          precision: 2
-        }}
-        onChangeText={(amount, rawAmount) => {
-          this.onChangeAmount(amount);
-        }}
-        style={styles.input}
-        keyboardType="numeric"
-      />
-        
-      <WebView
+        <WebView
           ref={(ref) => (this.trustlyWebView = ref)}
           source={{ html: widget(ACCESS_ID, this.establishData) }}
           renderLoading={this.LoadingIndicatorView}
@@ -223,10 +218,10 @@ export default class App extends Component {
           javaScriptEnabled={true}
           startInLoadingState
           style={styles.widget}
-      />
-
-    </SafeAreaView>
-  }
+        />
+      </SafeAreaView>
+    );
+  };
 
   buildLightBoxScreen = async () => {
     const html = await lightbox(ACCESS_ID, this.establishData);
@@ -249,42 +244,35 @@ export default class App extends Component {
     });
 
     this.setState({ step: 'lightbox' });
-  }
+  };
 
   buildResultScreen = () => {
+    return (
+      <SafeAreaView style={styles.backgroundStyle}>
+        <Text style={styles.amountText}>{`SUCCESS PAGE`}</Text>
 
-    return <SafeAreaView style={styles.backgroundStyle}>
+        <Text style={styles.amountText}>{this.state.returnParameters}</Text>
 
-      <Text style={styles.amountText}>
-        {`SUCCESS PAGE`}
-      </Text>
-        
-      <Text style={styles.amountText}>
-        {this.state.returnParameters}
-      </Text>
-
-      <TouchableOpacity
-        style={styles.payButton}
-        onPress={this.onPressBackToWidget} 
+        <TouchableOpacity
+          style={styles.payButton}
+          onPress={this.onPressBackToWidget}
         >
-        <Text style={{ color: '#fff' }}>Back to widget</Text>
-      </TouchableOpacity>
-
-    </SafeAreaView>
-  }
+          <Text style={{ color: '#fff' }}>Back to widget</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  };
 
   render() {
-    return (
-
-      (this.state.step === 'widget') ? this.buildWidgetScreen() : 
-      (this.state.step === 'lightbox') ? this.state.lightboxComponent : this.buildResultScreen()
-
-    );
+    return this.state.step === 'widget'
+      ? this.buildWidgetScreen()
+      : this.state.step === 'lightbox'
+      ? this.state.lightboxComponent
+      : this.buildResultScreen();
   }
 }
 
 const styles = StyleSheet.create({
-
   backgroundStyle: {
     backgroundColor: Colors.lighter,
     flex: 1,
@@ -293,54 +281,54 @@ const styles = StyleSheet.create({
 
   header: {
     alignSelf: 'stretch',
-    backgroundColor: "#333",
+    backgroundColor: '#333',
     height: 50,
   },
 
   widget: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
 
   lightbox: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
 
   footer: {
     alignSelf: 'stretch',
-    backgroundColor: "#333",
+    backgroundColor: '#333',
     height: 40,
     textAlign: 'center',
-    color: "#fff"
+    color: '#fff',
   },
 
   footerText: {
     alignSelf: 'stretch',
-    backgroundColor: "#333",
+    backgroundColor: '#333',
     height: 40,
     textAlign: 'center',
-    color: "#fff",
+    color: '#fff',
     fontSize: 20,
-    paddingTop: 10
+    paddingTop: 10,
   },
 
   subView: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "#FFFFFF",
-    height: "100%",
+    backgroundColor: '#FFFFFF',
+    height: '100%',
     zIndex: 5,
   },
 
   loading: {
     flex: 1,
-    position: "absolute",
-    justifyContent: "center",
-    height: '100%' , 
-    width: '100%'
+    position: 'absolute',
+    justifyContent: 'center',
+    height: '100%',
+    width: '100%',
   },
 
   input: {
@@ -357,11 +345,10 @@ const styles = StyleSheet.create({
   },
 
   payButton: {
-    backgroundColor: '#147EFB', 
+    backgroundColor: '#147EFB',
     padding: 10,
     borderRadius: 4,
     alignItems: 'center',
     margin: 15,
   },
-
 });
