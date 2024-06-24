@@ -25,7 +25,7 @@ cd ios && pod install
 
 ## How it works
 
-Integrations in React Native must inform the `integrationContext` parameter with the value `InAppBrowserNotify` in the `establishData`, as in the example below:
+For React Native integrations, set the `integrationContext` parameter to `InAppBrowserNotify` within the `establishData` object, as shown in the example below:
 
 ```javascript
 let establishData = {
@@ -38,7 +38,7 @@ let establishData = {
 };
 ```
 
-After that, when an OAuth bank is selected in the Trustly Lightbox, a message will be triggered and must be captured by the `onMessage` attribute of the WebView, as in the example below (and in the `App.tsx` file):
+With the `integrationContext` parameter set appropriately, when an OAuth bank is selected in the Trustly Lightbox, a message will be triggered and must be captured by the `onMessage` attribute of the WebView, as shown in the example below and in the `App.tsx` file:
 
 ```js
 <WebView
@@ -48,7 +48,7 @@ After that, when an OAuth bank is selected in the Trustly Lightbox, a message wi
 />
 ```
 
-The function informed in `onMessage` will receive the message with a URL that must be opened in an in-app browser, as in the example below (and in the `App.tsx` file):
+The function provided in `onMessage` will receive a message containing a URL, which must be opened in an in-app browser, as shown in the example below and in the `App.tsx` file:
 
 ```javascript
 handleOAuthMessage = (message: any) => {
@@ -104,7 +104,7 @@ Trustly UI offers two types of user experiences that can be configured to fit yo
 
 <img src="docs/images/rn_print.png" width="25%" height="25%" style="display: block; margin: 0 auto" />
 
-In this case, we need to avoid the Widget calling the Lightbox immediately when the user selects a bank because we need to get the `amount` value to fill the `establishData` first. To achieve this, we need to add a piece of JavaScript inside the Widget (as in the `trustly.tsx` file).
+In this case, we need to prevent the Select Bank Widget from calling the Lightbox immediately when the user selects a bank, as we first need to obtain the `amount` value to populate the `establishData`. To achieve this, we need to add a piece of JavaScript inside the Select Bank Widget, as shown in the `trustly.tsx` file.
 
 ```js
 const TrustlyWidgetBankSelected = (data) => {
@@ -114,7 +114,7 @@ const TrustlyWidgetBankSelected = (data) => {
 Trustly.selectBankWidget(establishData, TrustlyOptions, TrustlyWidgetBankSelected);
 ```
 
-Now, you must implement in your WebView a way to handle the 3 events triggered by the Widget and Lightbox to handle the bank selection, close or cancel action, and when the authorization ends.
+Now, implement a way in the WebView to handle the three events triggered by the Select Bank Widget and Lightbox: user selects a bank, user cancels the authorization, and the user completes the authorization.
 
 - Bank selection event (`PayWithMyBank.createTransaction`): In this demonstration app, after selecting the bank, we redirect the user to the authentication page.
 
