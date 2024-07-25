@@ -21,11 +21,11 @@ cd ios && pod install
 
 ### 4. Start the app!
 
-`npm start` or `npx react-native start` if you have not installed `react-native-cli`
+`npm start` or `npx react-native start` (if you don't have `react-native-cli` installed)
 
 ## How it works
 
-Integrations in React Native must inform the `integrationContext` parameter with the value `InAppBrowserNotify` in the establish data, as in the example below:
+For React Native integrations, set the `integrationContext` parameter to `InAppBrowserNotify` within the `establishData` object, as shown in the example below:
 
 ```javascript
 let establishData = {
@@ -38,20 +38,20 @@ let establishData = {
 };
 ```
 
-After that, when an Oauth bank is selected in the Trustly Lightbox, a message will be triggered and must be captured by the `onMessage` attribute of the WebView, as in the example below (and in the App.tsx file):
+With the `integrationContext` parameter set appropriately, when an OAuth bank is selected in the Trustly Lightbox, a message will be triggered and must be captured by the `onMessage` attribute of the WebView, as shown in the example below and in the `App.tsx` file:
 
 ```js
 <WebView
   ...
-  onMessage={this.handleOauthMessage}
+  onMessage={this.handleOAuthMessage}
   ...
 />
 ```
 
-The function informed in `onMessage` will receive the message with a url that must be opened in an in-app-browser, as in the example below (and in the App.tsx file):
+The function provided in `onMessage` will receive a message containing a URL, which must be opened in an in-app browser, as shown in the example below and in the `App.tsx` file:
 
 ```javascript
-handleOauthMessage = (message: any) => {
+handleOAuthMessage = (message: any) => {
   const data = message.nativeEvent.data
 
   if ( typeof data !== 'string') return;
@@ -68,42 +68,43 @@ handleOauthMessage = (message: any) => {
 }
 ```
 
-## Closing Chrome Custom Tab in Android
+## Closing Chrome Custom Tabs on Android
 
 ### RedirectActivity
 
-When the application receive some action for example `in-app-browser-rn`, or the name that you defined in `urlScheme`, it will call your target Activity with some flags, and reload it.
-The example below is from `RedirectActivity`
+When the application receives some action like `in-app-browser-rn` (or any name that you defined in the `urlScheme`), it will call your target `Activity` with some flags, and reload it.
+
+The example below is from `RedirectActivity`:
 
 ```java
-    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    startActivity(intent);
-    finish();
+Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+startActivity(intent);
+finish();
 ```
 
 ### AndroidManifest
 
 ```xml
-    <activity
-    android:name=".RedirectActivity"
-    android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW" />
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="in-app-browser-rn" />
-        </intent-filter>
-    </activity>
+<activity
+  android:name=".RedirectActivity"
+  android:exported="true">
+    <intent-filter>
+      <action android:name="android.intent.action.VIEW" />
+      <category android:name="android.intent.category.DEFAULT" />
+      <category android:name="android.intent.category.BROWSABLE" />
+      <data android:scheme="in-app-browser-rn" />
+    </intent-filter>
+</activity>
 ```
 
-## How integrate native components with Trustly webview
+## How to integrate native components with Trustly WebView
 
 Trustly UI offers two types of user experiences that can be configured to fit your application. The primary method is to render the Select Bank Widget (shown below) which allows users to quickly search for and select a bank to begin the authorization process. See the [Trustly UI docs](https://amer.developers.trustly.com/payments/docs/sdk#select-bank-widget) for more details.
 
 <img src="docs/images/rn_print.png" width="25%" height="25%" style="display: block; margin: 0 auto" />
 
-In this case, we need to avoid that `widget` call the `lightbox` immediatley when the user select a bank, because we need to get the amount value to fill the establish data first, so, for this beahvior we need to add a peace of javascript inside the `widget` like in the file `trustly.tsx` lines 19 to 23.
+In this case, we need to prevent the Select Bank Widget from calling the Lightbox immediately when the user selects a bank, as we first need to obtain the `amount` value to populate the `establishData`. To achieve this, we need to add a piece of JavaScript inside the Select Bank Widget, as shown in the `trustly.tsx` file.
 
 ```js
 const TrustlyWidgetBankSelected = (data) => {
@@ -113,24 +114,24 @@ const TrustlyWidgetBankSelected = (data) => {
 Trustly.selectBankWidget(establishData, TrustlyOptions, TrustlyWidgetBankSelected);
 ```
 
-Now you must to implement in your `webview` a way to handle with 3 events triggered by the `widget` and `lightbox` to handle with the bank selection, close or cancel action and when the authorization finished.
+Now, implement a way in the WebView to handle the three events triggered by the Select Bank Widget and Lightbox: user selects a bank, user cancels the authorization, and the user completes the authorization.
 
-- Bank selection event (`PayWithMyBank.createTransaction`): In this demonstration app, after select the bank, we redirect the user to the authentication page.
+- Bank selection event (`PayWithMyBank.createTransaction`): In this demonstration app, after selecting the bank, we redirect the user to the authentication page.
 
 ```js
 handlePaymentProviderId(data: string) {
-  if(data.startsWith('PayWithMyBank.createTransaction')) {
-    let splitedData = data.split('|')
+  if (data.startsWith('PayWithMyBank.createTransaction')) {
+    let splitData = data.split('|')
 
     this.establishData.amount = this.state.amount;
-    this.establishData.paymentProviderId = splitedData[1];
+    this.establishData.paymentProviderId = splitData[1];
 
     this.goToAuthBankSelected();
   }
 }
 
 goToAuthBankSelected = () => {
-  this.setState({step: 'lightbox'});
+  this.setState({ step: 'lightbox' });
 }
 ```
 
@@ -139,7 +140,7 @@ goToAuthBankSelected = () => {
 ```js
 handleWithCancelOrClose(data: string) {
   if(data.endsWith('close|cancel|')) {
-    this.setState({step: 'widget'});
+    this.setState({ step: 'widget' });
   }
 }
 ```
@@ -148,7 +149,7 @@ handleWithCancelOrClose(data: string) {
 
 ```js
 handleClosePanelSuccess(data: string) {
-  if(data.startsWith('PayWithMyBank.closePanel|')) {
+  if (data.startsWith('PayWithMyBank.closePanel|')) {
     let returnValues = data.split('|')[1];
     let returnParameters = returnValues.split('?')[1];
 

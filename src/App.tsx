@@ -106,7 +106,7 @@ export default class App extends Component {
     }
   }
 
-  handleOauthMessage = (message: any) => {
+  handleOAuthMessage = (message: any) => {
     const data = message.nativeEvent.data
     
     if ( typeof data !== 'string') return;
@@ -129,10 +129,10 @@ export default class App extends Component {
 
   handlePaymentProviderId(data: string) {
     if(data.startsWith('PayWithMyBank.createTransaction')) {
-      let splitedData = data.split('|')
+      let splitData = data.split('|')
 
       this.establishData.amount = this.state.amount;
-      this.establishData.paymentProviderId = splitedData[1];
+      this.establishData.paymentProviderId = splitData[1];
       
       this.goToAuthBankSelected();
     }
@@ -179,7 +179,7 @@ export default class App extends Component {
     });
   }
 
-  postMessageForOauth = `
+  postMessageForOAuth = `
     window.addEventListener(
       "message",
       function (event) {
@@ -218,8 +218,8 @@ export default class App extends Component {
           ref={(ref) => (this.trustlyWebView = ref)}
           source={{ html: widget(ACCESS_ID, this.establishData) }}
           renderLoading={this.LoadingIndicatorView}
-          injectedJavaScript={this.postMessageForOauth}
-          onMessage={this.handleOauthMessage}
+          injectedJavaScript={this.postMessageForOAuth}
+          onMessage={this.handleOAuthMessage}
           javaScriptEnabled={true}
           startInLoadingState
           style={styles.widget}
@@ -238,8 +238,8 @@ export default class App extends Component {
             ref={(ref) => (this.trustlyWebView = ref)}
             source={{ html }}
             renderLoading={this.LoadingIndicatorView}
-            injectedJavaScript={this.postMessageForOauth}
-            onMessage={this.handleOauthMessage}
+            injectedJavaScript={this.postMessageForOAuth}
+            onMessage={this.handleOAuthMessage}
             javaScriptEnabled={true}
             startInLoadingState
             style={styles.widget}
