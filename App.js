@@ -4,13 +4,15 @@
  */
 
 import { StyleSheet, View } from 'react-native';
-import TrustlyReactNativeSDK from 'trustly-react-native-sdk/js/TrustlyReactNativeSDKNativeComponent';
+import { TrustlyWidget } from 'trustly-react-native-sdk';
+
+const establishData = {};
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <TrustlyReactNativeSDK
-        url='https://www.trustly.com'
+      <TrustlyWidget
+        establishData={establishData}
         style={{ height: '100%', width: '100%' }}
       />
     </View>
@@ -23,5 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     flex: 1,
     justifyContent: 'center',
+    paddingBlock: 100,
+    paddingInline: 25,
   },
 });
