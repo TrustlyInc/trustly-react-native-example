@@ -12,5 +12,7 @@ npm-debug.*
 *.p8
 *.p12
 
+env.js
+
 # macOS
 .DS_Store
