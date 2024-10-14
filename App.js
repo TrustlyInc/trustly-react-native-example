@@ -6,7 +6,7 @@
 import { StyleSheet, View } from 'react-native';
 import { TrustlyWidget } from 'trustly-react-native-sdk';
 
-const establishData = {};
+import establishData from './establishData';
 
 export default function App() {
   return (
