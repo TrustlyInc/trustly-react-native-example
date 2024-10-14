@@ -1,5 +1,8 @@
 # Trustly React Native Example
 
+> [!WARNING]  
+> Work in progress, not yet complete and unreleased.
+
 ## Getting Started
 
 ### Requirements
