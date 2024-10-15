@@ -11,7 +11,7 @@ import { TrustlyWidget } from 'trustly-react-native-sdk';
 
 import type { Node } from 'react';
 
-import establishData from './establishData';
+import establishData from './establish-data';
 
 export default function App(): Node {
   return (

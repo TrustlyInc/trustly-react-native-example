@@ -15,7 +15,7 @@
 ### Setup
 
 - Copy the `env.example.js` file to a new `env.js` file and fill out your environment variables.
-- (Optional) Edit the payload information in the `establishData.js` file.
+- (Optional) Edit the payload information in the `establish-data.js` file.
 
 ### SDK Installation and Update
 
