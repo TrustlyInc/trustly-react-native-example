@@ -1,14 +1,19 @@
 /**
  * @format
- * @flow strict-local
+ * @flow strict
  */
 
+import React from 'react';
+// $FlowFixMe[nonstrict-import]
 import { StyleSheet, View } from 'react-native';
+// $FlowFixMe[cannot-resolve-module]
 import { TrustlyWidget } from 'trustly-react-native-sdk';
+
+import type { Node } from 'react';
 
 import establishData from './establishData';
 
-export default function App() {
+export default function App(): Node {
   return (
     <View style={styles.container}>
       <TrustlyWidget

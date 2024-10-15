@@ -1,3 +1,8 @@
+/**
+ * @format
+ * @flow strict
+ */
+
 import { ACCESS_ID, MERCHANT_ID, MERCHANT_REFERENCE } from './env';
 
 export default {
