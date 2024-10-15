@@ -54,3 +54,9 @@ cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install
 cd $APP_FOLDER
 npx expo run
 ```
+
+## Contributing
+
+### Setup
+
+We recommend the [**Visual Studio Code**](https://code.visualstudio.com/) as the code editor. There are some [settings](.vscode/settings.json) for it versioned in this repository, but, please, also install its recommended [extensions](.vscode/extensions.json).
