@@ -5,9 +5,11 @@
 [libs]
 
 [lints]
-untyped-type-import=error
-internal-type=error
+all=warn
 deprecated-type-bool=error
+internal-type=error
+sketchy-null-bool=off
+untyped-type-import=error
 
 [options]
 
