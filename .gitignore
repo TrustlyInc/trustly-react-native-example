@@ -16,3 +16,6 @@ env.js
 
 # macOS
 .DS_Store
+
+# Tests
+coverage/
