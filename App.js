@@ -3,7 +3,7 @@
  * @flow strict
  */
 
-import React from 'react';
+import React, { StrictMode } from 'react';
 // $FlowFixMe[nonstrict-import]
 import { StyleSheet, View } from 'react-native';
 // $FlowFixMe[cannot-resolve-module]
@@ -15,12 +15,11 @@ import establishData from './establish-data';
 
 export default function App(): Node {
   return (
-    <View style={styles.container}>
-      <TrustlyWidget
-        establishData={establishData}
-        style={{ height: '100%', width: '100%' }}
-      />
-    </View>
+    <StrictMode>
+      <View style={styles.container}>
+        <TrustlyWidget establishData={establishData} style={{ height: '100%', width: '100%' }} />
+      </View>
+    </StrictMode>
   );
 }
 
