@@ -1508,7 +1508,7 @@ SPEC CHECKSUMS:
   React-utils: f242eb7e7889419d979ca0e1c02ccc0ea6e43b29
   ReactCommon: f7da14a8827b72704169a48c929bcde802698361
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  trustly-react-native-sdk: 26b52258af71bd65c9d074b44e461170c8f36a14
+  trustly-react-native-sdk: fa3b35dc93790ce707d8458eb9a65cfae86611aa
   Yoga: 950bbfd7e6f04790fdb51149ed51df41f329fcc8
 
 PODFILE CHECKSUM: 9d981485f73be4469572102b7ca6bc00965d8d3e
