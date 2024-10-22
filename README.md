@@ -3,6 +3,14 @@
 > [!WARNING]  
 > Work in progress, not yet complete and unreleased.
 
+Note: The SDK package will be published in an NPM repository later. For now, please manually clone the [SDK git repository](https://github.com/TrustlyInc/trustly-react-native/) using the same root as this application. Example:
+
+```
+.
+├── trustly-react-native
+└── trustly-react-native-example
+```
+
 ## Getting Started
 
 ### Requirements
@@ -21,8 +29,8 @@
 
 For the following commands, remember to replace these placeholders:
 
-- `$APP_FOLDER`: Path of this **Example** folder
-- `$SDK_FOLDER`: Path of the **SDK** folder
+- `$APP_FOLDER`: Local path of this **Example** folder
+- `$SDK_FOLDER`: Local path of the **SDK** folder
 
 #### Clean previous builds (if any)
 
@@ -35,7 +43,7 @@ rm -rfv node_modules && cd ios && rm -rfv build
 
 ```shell
 cd $APP_FOLDER
-yarn install && yarn add $SDK_FOLDER
+yarn install
 ```
 
 #### Build
