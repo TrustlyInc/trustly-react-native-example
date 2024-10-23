@@ -1,23 +1,18 @@
 /**
  * @format
- * @flow strict
  */
 
 import React, { StrictMode } from 'react';
-// $FlowFixMe[nonstrict-import]
 import { StyleSheet, View } from 'react-native';
-// $FlowFixMe[cannot-resolve-module]
 import { TrustlyWidget } from 'trustly-react-native-sdk';
 
-import type { Node } from 'react';
+import EstablishData from './constants/EstablishData';
 
-import establishData from './establish-data';
-
-export default function App(): Node {
+export default function App() {
   return (
     <StrictMode>
       <View style={styles.container}>
-        <TrustlyWidget establishData={establishData} style={{ height: '100%', width: '100%' }} />
+        <TrustlyWidget establishData={EstablishData} style={{ height: '100%', width: '100%' }} />
       </View>
     </StrictMode>
   );
@@ -29,7 +24,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     flex: 1,
     justifyContent: 'center',
-    paddingBlock: 100,
-    paddingInline: 25,
+    paddingVertical: 100,
+    paddingHorizontal: 25,
   },
 });

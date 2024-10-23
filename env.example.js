@@ -1,6 +1,5 @@
 /**
  * @format
- * @flow strict
  */
 
 export const ACCESS_ID = '<Provided by Trustly>'; // Required
