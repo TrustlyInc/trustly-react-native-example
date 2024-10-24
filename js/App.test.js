@@ -1,5 +1,13 @@
+/**
+ * @format
+ * @flow strict
+ */
+/* eslint-disable import/no-unresolved */
+
+// $FlowFixMe[untyped-import]
 import { render } from '@testing-library/react-native';
 import React from 'react';
+// $FlowFixMe[cannot-resolve-module]
 import { TrustlyWidget } from 'trustly-react-native-sdk';
 
 import App from './App';

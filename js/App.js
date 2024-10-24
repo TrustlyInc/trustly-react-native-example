@@ -2,6 +2,7 @@
  * @format
  * @flow strict
  */
+/* eslint-disable import/no-unresolved */
 
 import React, { StrictMode } from 'react';
 // $FlowFixMe[nonstrict-import]
