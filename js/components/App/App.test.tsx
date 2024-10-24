@@ -3,7 +3,7 @@ import { TrustlyWidget } from 'trustly-react-native-sdk';
 
 import App from './App';
 
-import EstablishData from './constants/EstablishData';
+import EstablishData from '../../constants/EstablishData';
 
 jest.mock(
   'trustly-react-native-sdk',
