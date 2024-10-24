@@ -12,7 +12,7 @@ import { TrustlyWidget } from 'trustly-react-native-sdk';
 
 import App from './App';
 
-import establishData from './establish-data';
+import EstablishData from '../../constants/EstablishData';
 
 jest.mock(
   'trustly-react-native-sdk',
@@ -32,6 +32,9 @@ describe('render widget properly', () => {
 
   it('should render with correct props', () => {
     render(<App />);
-    expect(TrustlyWidget).toHaveBeenCalledWith(expect.objectContaining({ establishData }), {});
+    expect(TrustlyWidget).toHaveBeenCalledWith(
+      expect.objectContaining({ establishData: EstablishData }),
+      {},
+    );
   });
 });

@@ -6,6 +6,6 @@
 // $FlowFixMe[untyped-import]
 import { registerRootComponent } from 'expo';
 
-import App from './App';
+import App from './components/App';
 
 registerRootComponent(App);
