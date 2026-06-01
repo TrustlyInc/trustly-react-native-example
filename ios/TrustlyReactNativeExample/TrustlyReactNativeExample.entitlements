@@ -4,6 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
+		<string>applinks:alpha-merchant.tools.devent.trustly.one?mode=developer</string>
 		<string>applinks:alpha-merchant.tools.devent.trustly.one</string>
 	</array>
 </dict>
