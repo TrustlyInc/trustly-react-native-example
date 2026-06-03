@@ -7,7 +7,7 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 ## Step 1: Install
 
 ```sh
-npm install
+npm install --legacy-peer-deps
 ```
 
 ## Step 2: Build and run your app
