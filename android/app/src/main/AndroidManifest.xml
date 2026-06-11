@@ -31,9 +31,7 @@
             <category android:name="android.intent.category.BROWSABLE" />
 
             <!-- App Links -->
-            <data android:scheme="https" />
-            <data android:host="alpha-merchant.tools.devent.trustly.one" />
-            <data android:path="/start/oauth/app/" />
+            <data android:scheme="https" android:host="alpha-merchant.tools.devent.trustly.one" android:pathPrefix="/start/oauth/app/" />
           </intent-filter>
       </activity>
     </application>
