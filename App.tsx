@@ -23,8 +23,7 @@ export default function App() {
     requestSignature: "HT5mVOqBXa8ZlvgX2USmPeLns5o=",
     customer: { name: "John", address: { country: "US" } },
     metadata: {
-      integrationContenxt: "InAppBrowser",
-      urlScheme: "trustlyrnexample://",
+      integrationContext: "SecureBrowser",
       deepLinkStrategy: "deeplink-url",
       deepLinkUrl: Platform.OS === "android" ? 
       "intent://alpha-merchant.tools.devent.trustly.one/start/oauth/app/#Intent;scheme=https;end" : 

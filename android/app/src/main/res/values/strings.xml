@@ -1,4 +1,3 @@
 <resources>
     <string name="app_name">TrustlyReactNativeExample</string>
-    <string name="trustly_url_scheme">trustlyrnexample</string>
 </resources>
