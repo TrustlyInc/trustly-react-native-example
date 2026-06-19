@@ -24,7 +24,6 @@ export default function App() {
     customer: { name: "John", address: { country: "US" } },
     metadata: {
       integrationContext: "SecureBrowser",
-      deepLinkStrategy: "deeplink-url",
       deepLinkUrl: Platform.OS === "android" ? 
       "intent://alpha-merchant.tools.devent.trustly.one/start/oauth/app/#Intent;scheme=https;end" : 
       "https://alpha-merchant.tools.devent.trustly.one/start/oauth/app/",
